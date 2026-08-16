@@ -1,4 +1,4 @@
-# DriverGuard Development Guide
+# SADAN Development Guide
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd driverguard
+cd sadan
 
 # Install dependencies
 npm install

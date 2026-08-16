@@ -16,7 +16,7 @@ import {
 import { useState } from 'react';
 
 /**
- * Main sidebar navigation for the DriverGuard dashboard.
+ * Main sidebar navigation for the SADAN dashboard.
  * Collapsible, dark-themed, with grouped navigation items.
  */
 export function Sidebar() {
@@ -38,7 +38,7 @@ export function Sidebar() {
         {!collapsed && (
           <div className="flex flex-col">
             <span className="text-sm font-semibold tracking-tight text-foreground">
-              DriverGuard
+              SADAN
             </span>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Fleet Safety

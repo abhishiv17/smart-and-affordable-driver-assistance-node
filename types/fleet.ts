@@ -9,12 +9,6 @@
 export interface Fleet {
   id: string;
   name: string;
-  ownerName: string;
-  ownerEmail: string;
-  /** Total number of vehicles registered to this fleet */
-  vehicleCount: number;
-  /** Total number of drivers registered to this fleet */
-  driverCount: number;
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
 }

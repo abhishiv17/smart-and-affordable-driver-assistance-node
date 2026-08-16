@@ -3,7 +3,7 @@ import { Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Login',
-  description: 'Sign in to DriverGuard fleet safety platform.',
+  description: 'Sign in to SADAN fleet safety platform.',
 };
 
 /**
@@ -21,7 +21,7 @@ export default function LoginPage() {
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              DriverGuard
+              SADAN
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Fleet Safety Intelligence Platform

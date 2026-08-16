@@ -47,15 +47,29 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* DriverGuard Safety State Colors */
+  /* SADAN Safety State Colors */
   --color-safety-normal: oklch(0.75 0.18 155);
   --color-safety-warning: oklch(0.80 0.16 85);
   --color-safety-critical: oklch(0.63 0.24 25);
   --color-safety-offline: oklch(0.55 0.01 0);
+  --color-safety-info: oklch(0.70 0.14 250);
+
+  /* Vehicle Status Colors */
+  --color-status-active: oklch(0.75 0.18 155);
+  --color-status-idle: oklch(0.80 0.16 85);
+  --color-status-offline: oklch(0.55 0.01 0);
+  --color-status-maintenance: oklch(0.70 0.14 250);
+
+  /* Score Band Colors */
+  --color-score-excellent: oklch(0.75 0.18 155);
+  --color-score-good: oklch(0.72 0.12 200);
+  --color-score-fair: oklch(0.80 0.16 85);
+  --color-score-poor: oklch(0.75 0.18 55);
+  --color-score-critical: oklch(0.63 0.24 25);
 }
 
 /* =============================================================================
-   DriverGuard Dark Theme — Default
+   SADAN Dark Theme — Default
    Automotive safety operations aesthetic: dark, professional, industrial
    ============================================================================= */
 

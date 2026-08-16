@@ -5,7 +5,7 @@ import { Radio } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Device Simulator',
-  description: 'Simulate DriverGuard edge device telemetry for testing and demos.',
+  description: 'Simulate SADAN edge device telemetry for testing and demos.',
 };
 
 /**
@@ -18,7 +18,7 @@ export default function SimulatorPage() {
     <>
       <PageHeader
         title="Device Simulator"
-        description="Simulate DriverGuard edge device telemetry"
+        description="Simulate SADAN edge device telemetry"
       />
 
       <Card className="border-dashed">
@@ -30,7 +30,7 @@ export default function SimulatorPage() {
             Edge Device Simulator
           </h2>
           <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
-            Simulate telemetry from the DriverGuard ARM edge device including
+            Simulate telemetry from the SADAN ARM edge device including
             GPS, IMU, drowsiness detection, and network state changes.
             The simulator will be replaced by the physical device in production.
           </p>

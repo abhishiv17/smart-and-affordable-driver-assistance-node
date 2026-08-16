@@ -8,6 +8,7 @@
 // =============================================================================
 
 import { createBrowserClient } from '@supabase/ssr';
+import type { Database } from '@/types/database';
 
 /**
  * Creates a Supabase client for browser-side usage.
@@ -24,5 +25,5 @@ export function createClient() {
     );
   }
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 }

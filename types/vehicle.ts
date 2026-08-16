@@ -5,20 +5,20 @@
 /**
  * Status of a vehicle in the fleet.
  */
-export type VehicleStatus = 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
+export type VehicleStatus = 'ACTIVE' | 'IDLE' | 'OFFLINE' | 'MAINTENANCE';
 
 /**
  * Represents a commercial vehicle in a logistics fleet.
- * Each vehicle may have one DriverGuard device attached.
+ * Each vehicle may have one SADAN device attached.
  */
 export interface Vehicle {
   id: string;
   fleetId: string;
-  registrationNumber: string;
+  vehicleNumber: string;
   make: string;
   model: string;
   year: number;
-  /** The DriverGuard device currently attached to this vehicle, if any */
+  /** The SADAN device currently attached to this vehicle, if any */
   deviceId: string | null;
   /** Currently assigned driver, if any */
   currentDriverId: string | null;
@@ -40,7 +40,7 @@ export interface Vehicle {
  */
 export interface VehicleSummary {
   id: string;
-  registrationNumber: string;
+  vehicleNumber: string;
   make: string;
   model: string;
   status: VehicleStatus;

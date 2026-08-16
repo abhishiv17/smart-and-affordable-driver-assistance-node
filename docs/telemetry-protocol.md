@@ -1,8 +1,8 @@
-# DriverGuard Telemetry Protocol
+# SADAN Telemetry Protocol
 
 ## Overview
 
-The Telemetry Protocol defines the data format used to communicate between the DriverGuard edge device (or Device Simulator) and the cloud platform. This is the **core contract** of the system.
+The Telemetry Protocol defines the data format used to communicate between the SADAN edge device (or Device Simulator) and the cloud platform. This is the **core contract** of the system.
 
 > **Important**: The Device Simulator will eventually be replaced by the physical ARM edge device. Both use this identical protocol, ensuring the cloud platform requires no changes when the physical device is integrated.
 
@@ -50,7 +50,7 @@ The Telemetry Protocol defines the data format used to communicate between the D
 | Field | Type | Source | Description |
 |---|---|---|---|
 | `id` | UUID | Device | Unique event identifier |
-| `deviceId` | UUID | Device | DriverGuard device that generated this event |
+| `deviceId` | UUID | Device | SADAN device that generated this event |
 | `vehicleId` | UUID | Config | Vehicle the device is installed in |
 | `timestamp` | ISO 8601 | Device clock | When the event was captured |
 | `latitude` | number | GPS | Decimal degrees (-90 to 90) |

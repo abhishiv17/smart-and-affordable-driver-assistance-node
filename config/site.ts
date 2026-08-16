@@ -3,8 +3,9 @@
 // =============================================================================
 
 export const siteConfig = {
-  name: 'DriverGuard',
-  description: 'Smart & Affordable Driver Assistance Platform for Fleet Safety Intelligence',
+  name: 'SADAN',
+  fullName: 'SADAN — Smart and Affordable Driver Assistance Node',
+  description: 'Smart & Affordable Driver Assistance Node for Fleet Safety Intelligence',
   /** Short tagline for the platform */
   tagline: 'Fleet Safety Intelligence',
   /** Version of the MVP */
@@ -14,6 +15,6 @@ export const siteConfig = {
   /** URLs */
   url: {
     /** Production URL (Vercel deployment) */
-    production: 'https://driverguard.vercel.app',
+    production: 'https://sadan.vercel.app',
   },
 } as const;

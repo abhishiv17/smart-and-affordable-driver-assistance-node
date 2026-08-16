@@ -1,166 +1,101 @@
-# DriverGuard
-
-**Smart & Affordable Driver Assistance Node**
+# SADAN — Smart and Affordable Driver Assistance Node
 
 > Fleet Safety Intelligence Platform for MSME Hackathon 6.0
 
 ---
 
-## Overview
+## What is SADAN?
 
-DriverGuard is a driver-safety intelligence platform designed for small and medium logistics fleets operating legacy commercial vehicles. The system provides real-time safety monitoring, driver behavior analysis, and AI-generated safety insights.
+SADAN is a driver-safety intelligence platform designed for small and medium logistics fleets operating legacy commercial vehicles. The system provides real-time safety monitoring, driver behavior analysis, and AI-generated safety insights.
 
-### Physical System (Proposed)
+### The Problem
 
-The proposed hardware consists of an ARM-based edge device with:
+Small fleet operators in India run legacy commercial vehicles with no modern safety features. Drivers face fatigue on long routes, harsh driving goes undetected, and fleet managers have no visibility into what's happening on the road.
 
-- **NoIR camera** — drowsiness detection via eye aspect ratio analysis
-- **6-axis IMU** — harsh braking/acceleration detection
-- **GPS** — location and speed tracking
-- **Cellular modem** — cloud telemetry synchronization
-- **Safety buzzer** — local immediate driver alerts
+### The Solution
 
-The edge device performs **safety-critical detection locally** and synchronizes lightweight telemetry to the cloud.
+An affordable ARM-based edge device installed in each vehicle that:
+- **Detects drowsiness** via NoIR camera and facial landmark analysis
+- **Detects harsh driving** via 6-axis IMU (braking, acceleration)
+- **Tracks location** via GPS
+- **Alerts the driver immediately** via local safety buzzer (no cloud round-trip)
+- **Synchronizes telemetry** to the cloud for fleet-wide monitoring
+- **Works offline** — safety-critical detection continues without connectivity
 
-### Software MVP
+### Architecture
 
-The software platform provides:
+```
+SADAN Edge Device (ARM + Sensors)
+        ↓ Telemetry (JSON/HTTPS)
+Next.js API (Validate → Process → Store)
+        ↓
+Supabase PostgreSQL + Realtime
+        ↓
+Next.js Dashboard + Groq AI Intelligence
+```
 
-- Fleet monitoring dashboard
-- Vehicle tracking and management
-- Driver safety profiles and scoring
-- Real-time safety alerts
-- Telemetry history and analytics
-- AI-generated safety insights (via Groq)
-- Device simulator for development and demos
-
-> The Device Simulator reproduces the telemetry that the physical edge device generates. The architecture ensures the physical device can replace the simulator without a redesign.
-
----
-
-## Current Phase
-
-**Phase 1 — MVP Foundation** (Complete)
-
-- Repository structure and architecture
-- TypeScript domain types and telemetry contract
-- Application shell with dark automotive theme
-- Route structure with placeholder pages
-- API route handler structure
-- Testing foundation
-- Documentation
-
----
-
-## Technology Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Core | Next.js 16, App Router, TypeScript, React 19 |
-| UI | Tailwind CSS v4, shadcn/ui, Lucide React |
+| Frontend | Next.js 16, React 19, Tailwind CSS 4 |
 | Backend | Next.js Route Handlers |
-| Database | Supabase PostgreSQL |
-| Realtime | Supabase Realtime |
-| Auth | Supabase Auth |
-| Validation | Zod |
-| Charts | Recharts |
-| Maps | MapLibre GL JS |
+| Database | Supabase (PostgreSQL + Realtime + Auth + RLS) |
 | AI | Groq API |
-| Testing | Vitest, React Testing Library, Playwright |
-| Deployment | Vercel |
-
----
+| Maps | MapLibre GL |
+| Charts | Recharts |
+| Validation | Zod |
+| Testing | Vitest + Playwright |
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 18+
-- npm 9+
-
-### Installation
-
 ```bash
-cd driverguard
+# Install dependencies
 npm install
-```
 
-### Environment Setup
-
-```bash
+# Set up environment variables
 cp .env.example .env.local
+# Edit .env.local with your Supabase and Groq API keys
+
+# Run development server
+npm run dev
 ```
-
-Fill in the environment variables in `.env.local`:
-
-| Variable | Scope | Description |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Public | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Supabase anonymous key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server only | Supabase service role key |
-| `GROQ_API_KEY` | Server only | Groq API key for AI features |
-| `NEXT_PUBLIC_MAP_STYLE_URL` | Public | MapLibre GL style URL |
-
-> ⚠️ Never commit `.env.local` or expose server-only keys to client code.
-
-### Development
-
-```bash
-npm run dev       # Start development server
-npm run build     # Production build
-npm run start     # Start production server
-npm run lint      # ESLint
-npx tsc --noEmit  # TypeScript type checking
-npx vitest run    # Run unit tests
-```
-
----
 
 ## Project Structure
 
 ```
-driverguard/
-├── app/                    # Next.js App Router
-│   ├── (auth)/             # Auth routes (login)
-│   ├── (dashboard)/        # Dashboard routes
-│   │   ├── dashboard/      # Fleet overview
-│   │   ├── vehicles/       # Vehicle management
-│   │   ├── drivers/        # Driver management
-│   │   ├── alerts/         # Safety alerts
-│   │   ├── ai/             # AI intelligence
-│   │   └── simulator/      # Device simulator
-│   └── api/                # API route handlers
-├── components/             # React components
-│   ├── ui/                 # shadcn/ui components
-│   ├── layout/             # Shell components
-│   └── [feature]/          # Feature-specific components
-├── lib/                    # Business logic & utilities
-│   ├── supabase/           # Database clients
-│   ├── telemetry/          # Telemetry processing
-│   ├── safety/             # Safety scoring
-│   ├── ai/                 # Groq AI integration
-│   ├── api/                # API utilities
-│   └── utils/              # Shared utilities
-├── types/                  # TypeScript domain types
-├── hooks/                  # React hooks
-├── config/                 # App configuration
-├── supabase/               # Migrations & seed data
-├── tests/                  # Test suites
-└── docs/                   # Documentation
+├── app/                  # Next.js App Router
+│   ├── (auth)/           # Authentication pages
+│   ├── (dashboard)/      # Dashboard pages (fleet, vehicles, drivers, alerts, AI, simulator)
+│   └── api/              # API route handlers
+├── components/           # React components
+│   ├── layout/           # Layout components (sidebar, topbar, page-header)
+│   └── ui/               # Base UI components (shadcn/ui)
+├── config/               # Application configuration
+├── docs/                 # Architecture and protocol documentation
+├── hooks/                # React hooks
+├── lib/                  # Business logic
+│   ├── ai/               # Groq AI integration
+│   ├── api/              # API utilities
+│   ├── safety/           # Safety scoring and severity
+│   ├── supabase/         # Supabase client configuration
+│   └── telemetry/        # Telemetry validation and processing
+├── supabase/             # Database migrations and seed data
+├── tests/                # Unit and integration tests
+└── types/                # TypeScript domain types
 ```
 
----
+## Scripts
 
-## Architecture
-
-See [docs/architecture.md](docs/architecture.md) for the full architecture documentation.
-
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run lint         # ESLint
+npm run type-check   # TypeScript type checking
+npm run test         # Run unit tests
+npm run test:e2e     # Run end-to-end tests
 ```
-Edge Device → Telemetry Contract → Backend → Supabase → Realtime → Dashboard → AI
-```
-
----
 
 ## License
 
-Built for MSME Hackathon 6.0
+Built for MSME Hackathon 6.0.

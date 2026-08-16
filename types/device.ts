@@ -3,7 +3,7 @@
 // =============================================================================
 
 /**
- * Status of a DriverGuard edge device.
+ * Status of a SADAN edge device.
  */
 export type DeviceStatus = 'ONLINE' | 'OFFLINE' | 'ERROR' | 'PROVISIONING';
 
@@ -13,7 +13,7 @@ export type DeviceStatus = 'ONLINE' | 'OFFLINE' | 'ERROR' | 'PROVISIONING';
 export type NetworkStatus = 'ONLINE' | 'OFFLINE';
 
 /**
- * Represents a DriverGuard edge device (ARM-based processor with
+ * Represents a SADAN edge device (ARM-based processor with
  * NoIR camera, 6-axis IMU, GPS, cellular modem, and safety buzzer).
  *
  * In the MVP, the Device Simulator produces telemetry that mimics

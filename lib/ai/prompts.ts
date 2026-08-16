@@ -11,7 +11,7 @@
  * System prompt for fleet safety analysis.
  * Phase 2+: Will be refined based on Groq model capabilities.
  */
-export const FLEET_SAFETY_SYSTEM_PROMPT = `You are DriverGuard AI, a fleet safety intelligence analyst. 
+export const FLEET_SAFETY_SYSTEM_PROMPT = `You are SADAN AI, a fleet safety intelligence analyst. 
 You analyze telemetry data from commercial vehicle fleets and provide 
 actionable safety insights, risk assessments, and recommendations.
 

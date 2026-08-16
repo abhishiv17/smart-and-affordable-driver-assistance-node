@@ -19,11 +19,11 @@ function getPageTitle(pathname: string): string {
       }
     }
   }
-  return 'DriverGuard';
+  return 'SADAN';
 }
 
 /**
- * Top navigation bar for the DriverGuard dashboard.
+ * Top navigation bar for the SADAN dashboard.
  * Shows breadcrumb, search, notifications, and user avatar.
  */
 export function Topbar() {
@@ -34,7 +34,7 @@ export function Topbar() {
     <header className="flex h-14 items-center gap-4 border-b border-border bg-background px-6">
       {/* Breadcrumb / Page context */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">DriverGuard</span>
+        <span className="text-sm text-muted-foreground">SADAN</span>
         <span className="text-sm text-muted-foreground/50">/</span>
         <span className="text-sm font-medium text-foreground">{pageTitle}</span>
       </div>
@@ -79,7 +79,7 @@ export function Topbar() {
         {/* User avatar — Phase 2+: will show authenticated user */}
         <Avatar className="h-7 w-7">
           <AvatarFallback className="bg-muted text-[11px] font-semibold text-muted-foreground">
-            DG
+            SA
           </AvatarFallback>
         </Avatar>
       </div>

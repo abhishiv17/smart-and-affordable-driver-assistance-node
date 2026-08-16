@@ -48,7 +48,7 @@ export type TelemetryNetworkStatus = 'ONLINE' | 'OFFLINE';
 export interface TelemetryEvent {
   /** Unique identifier for this telemetry event */
   id: string;
-  /** The DriverGuard device that generated this event */
+  /** The SADAN device that generated this event */
   deviceId: string;
   /** The vehicle the device is installed in */
   vehicleId: string;

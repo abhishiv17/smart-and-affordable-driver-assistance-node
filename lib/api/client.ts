@@ -1,7 +1,7 @@
 // =============================================================================
 // API Client — Frontend HTTP Client
 // =============================================================================
-// Typed fetch wrapper for calling the DriverGuard API from client components.
+// Typed fetch wrapper for calling the SADAN API from client components.
 // =============================================================================
 
 /**
@@ -22,7 +22,7 @@ export interface ApiResponse<T> {
 }
 
 /**
- * Typed fetch wrapper for DriverGuard API calls.
+ * Typed fetch wrapper for SADAN API calls.
  */
 export async function apiClient<T>(
   endpoint: string,

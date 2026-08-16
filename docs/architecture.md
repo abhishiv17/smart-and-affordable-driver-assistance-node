@@ -1,8 +1,8 @@
-# DriverGuard Architecture
+# SADAN Architecture
 
 ## System Overview
 
-DriverGuard follows a clear data flow from physical edge devices through cloud processing to dashboard visualization and AI analysis.
+SADAN follows a clear data flow from physical edge devices through cloud processing to dashboard visualization and AI analysis.
 
 ```
 ┌─────────────────────┐

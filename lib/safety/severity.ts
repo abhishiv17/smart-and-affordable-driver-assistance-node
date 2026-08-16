@@ -13,23 +13,17 @@ export const SEVERITY_CONFIG: Record<AlertSeverity, {
   bgColor: string;
   borderColor: string;
 }> = {
-  LOW: {
-    label: 'Low',
+  INFO: {
+    label: 'Info',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/20',
   },
-  MEDIUM: {
-    label: 'Medium',
+  WARNING: {
+    label: 'Warning',
     color: 'text-amber-400',
     bgColor: 'bg-amber-500/10',
     borderColor: 'border-amber-500/20',
-  },
-  HIGH: {
-    label: 'High',
-    color: 'text-orange-400',
-    bgColor: 'bg-orange-500/10',
-    borderColor: 'border-orange-500/20',
   },
   CRITICAL: {
     label: 'Critical',

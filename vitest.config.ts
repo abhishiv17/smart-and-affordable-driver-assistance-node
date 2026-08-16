@@ -10,6 +10,7 @@ export default defineConfig({
     globals: true,
     setupFiles: [],
     include: ['tests/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['tests/integration/**'],
   },
   resolve: {
     alias: {

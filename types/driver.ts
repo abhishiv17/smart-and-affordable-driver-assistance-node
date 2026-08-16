@@ -5,7 +5,7 @@
 /**
  * Status of a driver in the fleet.
  */
-export type DriverStatus = 'ACTIVE' | 'INACTIVE' | 'ON_TRIP';
+export type DriverStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 /**
  * Represents a commercial vehicle driver in a logistics fleet.
