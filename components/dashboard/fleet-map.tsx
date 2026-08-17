@@ -53,7 +53,7 @@ const STATUS_COLORS: Record<string, string> = {
  */
 export function FleetMap({
   markers = [],
-  center = [72.8777, 19.076], // Mumbai default
+  center = [77.5946, 12.9716], // Bangalore default
   zoom = 10,
   height = '400px',
   className,
@@ -67,8 +67,10 @@ export function FleetMap({
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    const mapStyle = process.env.NEXT_PUBLIC_MAP_STYLE_URL ||
-      'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+    const envStyle = process.env.NEXT_PUBLIC_MAP_STYLE_URL;
+    const mapStyle = (envStyle && envStyle.startsWith('http'))
+      ? envStyle
+      : 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
     map.current = new maplibregl.Map({
       container: mapContainer.current,

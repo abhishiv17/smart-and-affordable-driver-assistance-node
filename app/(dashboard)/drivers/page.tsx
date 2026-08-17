@@ -8,6 +8,7 @@ import { StatCard } from '@/components/dashboard/stat-card';
 import { formatRelativeTime } from '@/lib/utils/formatters';
 import { Users, UserCheck, UserX } from 'lucide-react';
 import Link from 'next/link';
+import { DriverActions } from '@/components/admin/driver-actions';
 
 export const metadata: Metadata = {
   title: 'Drivers',
@@ -38,6 +39,7 @@ export default async function DriversPage() {
       <PageHeader
         title="Drivers"
         description="Manage and monitor all drivers in your fleet"
+        actions={<DriverActions />}
       />
 
       <div className="grid gap-3 sm:grid-cols-3 mb-6">

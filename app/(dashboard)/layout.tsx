@@ -1,9 +1,11 @@
 import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
+import { RealtimeAlertToasts } from '@/components/realtime/realtime-alert-toasts';
 
 /**
  * Dashboard layout wrapping all authenticated routes.
- * Provides sidebar navigation, topbar, and main content area.
+ * Provides sidebar navigation, topbar, main content area,
+ * and global realtime alert toast notifications.
  */
 export default function DashboardLayout({
   children,
@@ -23,6 +25,9 @@ export default function DashboardLayout({
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
+
+      {/* Global realtime alert toasts */}
+      <RealtimeAlertToasts />
     </div>
   );
 }

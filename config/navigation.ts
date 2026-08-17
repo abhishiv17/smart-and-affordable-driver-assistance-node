@@ -4,6 +4,7 @@
 
 import {
   LayoutDashboard,
+  MapPin,
   Truck,
   Users,
   AlertTriangle,
@@ -44,6 +45,11 @@ export const navigationConfig: NavGroup[] = [
         label: 'Dashboard',
         href: '/dashboard',
         icon: LayoutDashboard,
+      },
+      {
+        label: 'Live Map',
+        href: '/map',
+        icon: MapPin,
       },
     ],
   },

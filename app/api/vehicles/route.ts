@@ -43,3 +43,54 @@ export async function GET(request: NextRequest) {
     return errorResponse('Internal server error', 'INTERNAL_ERROR', 500);
   }
 }
+
+/**
+ * POST /api/vehicles
+ *
+ * Create a new vehicle and optionally assign a driver and device.
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { vehicle_number, model, driver_id, device_id, fleet_id } = body;
+
+    if (!vehicle_number) {
+      return errorResponse('vehicle_number is required', 'BAD_REQUEST', 400);
+    }
+
+    const supabase = createAdminClient();
+    const fleetId = fleet_id ?? 'a0000000-0000-0000-0000-000000000001';
+
+    const { data, error } = await supabase
+      .from('vehicles')
+      .insert({
+        fleet_id: fleetId,
+        vehicle_number,
+        model: model ?? null,
+        driver_id: driver_id ?? null,
+        device_id: device_id ?? null,
+        status: 'IDLE',
+        safety_score: 100,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[vehicles] Insert error:', error.message);
+      if (error.code === '23505') {
+        return errorResponse('Vehicle number already exists', 'CONFLICT', 409);
+      }
+      return errorResponse('Failed to create vehicle', 'INTERNAL_ERROR', 500);
+    }
+
+    // Link device to vehicle if provided
+    if (device_id) {
+      await supabase.from('devices').update({ vehicle_id: data.id }).eq('id', device_id);
+    }
+
+    return NextResponse.json({ data }, { status: 201 });
+  } catch (err) {
+    console.error('[vehicles] Unhandled error:', err);
+    return errorResponse('Internal server error', 'INTERNAL_ERROR', 500);
+  }
+}

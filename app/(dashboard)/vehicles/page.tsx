@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { StatCard } from '@/components/dashboard/stat-card';
 import { Truck, Activity, WifiOff, Wrench } from 'lucide-react';
 import Link from 'next/link';
+import { VehicleActions } from '@/components/admin/vehicle-actions';
 
 export const metadata: Metadata = {
   title: 'Vehicles',
@@ -41,6 +42,7 @@ export default async function VehiclesPage() {
       <PageHeader
         title="Vehicles"
         description="Manage and monitor all vehicles in your fleet"
+        actions={<VehicleActions />}
       />
 
       {/* Stats */}

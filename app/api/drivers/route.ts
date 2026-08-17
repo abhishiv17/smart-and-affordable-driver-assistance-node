@@ -43,3 +43,43 @@ export async function GET(request: NextRequest) {
     return errorResponse('Internal server error', 'INTERNAL_ERROR', 500);
   }
 }
+
+/**
+ * POST /api/drivers
+ *
+ * Create a new driver.
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { name, phone, fleet_id } = body;
+
+    if (!name) {
+      return errorResponse('name is required', 'BAD_REQUEST', 400);
+    }
+
+    const supabase = createAdminClient();
+    const fleetId = fleet_id ?? 'a0000000-0000-0000-0000-000000000001';
+
+    const { data, error } = await supabase
+      .from('drivers')
+      .insert({
+        fleet_id: fleetId,
+        name,
+        phone: phone ?? null,
+        status: 'ACTIVE',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[drivers] Insert error:', error.message);
+      return errorResponse('Failed to create driver', 'INTERNAL_ERROR', 500);
+    }
+
+    return NextResponse.json({ data }, { status: 201 });
+  } catch (err) {
+    console.error('[drivers] Unhandled error:', err);
+    return errorResponse('Internal server error', 'INTERNAL_ERROR', 500);
+  }
+}
