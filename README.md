@@ -1,101 +1,119 @@
-# SADAN — Smart and Affordable Driver Assistance Node
-
-> Fleet Safety Intelligence Platform for MSME Hackathon 6.0
+<div align="center">
+  <img src="https://img.shields.io/badge/MSME_Hackathon-6.0-emerald?style=for-the-badge" alt="MSME Hackathon 6.0" />
+  <h1>SADAN</h1>
+  <h3>Smart and Affordable Driver Assistance Node</h3>
+  <p>A next-generation, affordable fleet safety intelligence platform built to monitor driver behavior, prevent accidents, and deliver real-time AI insights for small and medium logistics fleets in India.</p>
+</div>
 
 ---
 
-## What is SADAN?
+## 🚦 The Problem
+Small fleet operators in India rely heavily on legacy commercial vehicles lacking modern safety features. On long, arduous routes, drivers face immense fatigue. Harsh driving (sudden braking, rapid acceleration) often goes undetected, and fleet managers operate with zero visibility into on-road realities until an accident occurs.
 
-SADAN is a driver-safety intelligence platform designed for small and medium logistics fleets operating legacy commercial vehicles. The system provides real-time safety monitoring, driver behavior analysis, and AI-generated safety insights.
+## 💡 The Solution
+**SADAN** bridges this gap using a hybrid Edge-Cloud architecture. 
+An affordable ARM-based edge device installed in the vehicle acts as a localized "black box" and safety monitor. It analyzes driver state locally to provide instant acoustic alerts, while simultaneously syncing telemetry to a cloud dashboard for fleet-wide monitoring and AI-powered intelligence.
 
-### The Problem
+### Key Features
+- **👀 Real-Time Drowsiness Detection**: Uses a NoIR camera and facial landmark analysis on the edge.
+- **🏎️ Harsh Driving Detection**: Analyzes 6-axis IMU data to detect hard braking, sudden acceleration, and erratic steering.
+- **⚡ Zero-Latency Alerts**: Alerts the driver instantly via a local buzzer—no cloud round-trip required.
+- **🛰️ Live Fleet Tracking**: Real-time GPS location tracking on a dark-mode, high-performance MapLibre GL dashboard.
+- **🧠 AI Safety Intelligence**: Leverages Groq's blazing-fast LLM API to analyze telemetry data and generate comprehensive, natural-language safety reports.
+- **📴 Offline Resilience**: Safety-critical detections and alerts continue working even when cellular connectivity drops.
+- **🎮 Built-in Simulator**: Features a web-based edge device simulator to generate live, realistic telemetry for testing and demonstration.
 
-Small fleet operators in India run legacy commercial vehicles with no modern safety features. Drivers face fatigue on long routes, harsh driving goes undetected, and fleet managers have no visibility into what's happening on the road.
+---
 
-### The Solution
+## 🏗️ Architecture
 
-An affordable ARM-based edge device installed in each vehicle that:
-- **Detects drowsiness** via NoIR camera and facial landmark analysis
-- **Detects harsh driving** via 6-axis IMU (braking, acceleration)
-- **Tracks location** via GPS
-- **Alerts the driver immediately** via local safety buzzer (no cloud round-trip)
-- **Synchronizes telemetry** to the cloud for fleet-wide monitoring
-- **Works offline** — safety-critical detection continues without connectivity
+SADAN employs a robust Edge-to-Cloud data flow.
 
-### Architecture
+```mermaid
+graph TD
+    subgraph "Vehicle (Edge)"
+        C[NoIR Camera] -->|Frames| ARM[ARM Edge Device]
+        I[6-Axis IMU] -->|Motion| ARM
+        G[GPS Module] -->|Location| ARM
+        ARM -->|Local Alert| B((Buzzer))
+    end
 
+    subgraph "Cloud (Vercel / Supabase)"
+        ARM -- "JSON over HTTPS" --> API[Next.js API Routes]
+        API -->|Validate & Ingest| DB[(Supabase PostgreSQL)]
+        DB -->|Realtime Stream| DASH[Next.js Dashboard]
+        DB --> AI[Groq AI Inference]
+        AI -->|Safety Insights| DASH
+    end
 ```
-SADAN Edge Device (ARM + Sensors)
-        ↓ Telemetry (JSON/HTTPS)
-Next.js API (Validate → Process → Store)
-        ↓
-Supabase PostgreSQL + Realtime
-        ↓
-Next.js Dashboard + Groq AI Intelligence
-```
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-| Layer | Technology |
+| Domain | Technologies Used |
 |---|---|
-| Frontend | Next.js 16, React 19, Tailwind CSS 4 |
-| Backend | Next.js Route Handlers |
-| Database | Supabase (PostgreSQL + Realtime + Auth + RLS) |
-| AI | Groq API |
-| Maps | MapLibre GL |
-| Charts | Recharts |
-| Validation | Zod |
-| Testing | Vitest + Playwright |
+| **Frontend** | Next.js 16.3 (App Router), React 19, Tailwind CSS 4, Framer Motion |
+| **Backend** | Next.js Route Handlers, Node.js |
+| **Database** | Supabase (PostgreSQL, Realtime, Auth, RLS) |
+| **AI Integration** | Groq API (`openai/gpt-oss-20b` / `llama-3.1-8b-instant`), AI SDK |
+| **Mapping** | MapLibre GL, MapTiler DataViz Dark |
+| **Components** | shadcn/ui, Radix UI, Base UI, Lucide React, Recharts |
+| **Validation** | Zod |
 
-## Getting Started
+---
 
-```bash
-# Install dependencies
-npm install
+## 🚀 Getting Started
 
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your Supabase and Groq API keys
+### Prerequisites
+- Node.js 20+
+- A [Supabase](https://supabase.com) project
+- A [Groq](https://console.groq.com) API Key
+- A [MapTiler](https://maptiler.com) API Key (for maps)
 
-# Run development server
-npm run dev
+### Local Setup
+
+1. **Clone & Install**
+   ```bash
+   git clone https://github.com/your-org/sadan.git
+   cd sadan
+   npm install
+   ```
+
+2. **Environment Configuration**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Fill in your `.env.local` with the required keys (Supabase URL/Anon/Service Role, Groq API, MapTiler API).
+
+3. **Database Initialization**
+   Run the provided SQL migrations in your Supabase SQL editor:
+   - `001_initial_schema.sql`
+   - `002_seed_data.sql`
+   - `003_rls_policies.sql`
+
+4. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
+   Visit `http://localhost:3000` and sign in.
+
+---
+
+## 📂 Project Structure
+
+```text
+├── app/                  # Next.js App Router (Dashboard, API, Auth)
+├── components/           # Reusable UI components & Dashboard panels
+├── config/               # App configuration (Navigation, Constants)
+├── hooks/                # Custom React hooks (Live Polling, etc.)
+├── lib/                  # Core Business Logic (AI, API, Database, Safety)
+├── supabase/migrations/  # PostgreSQL schema definitions and seeds
+├── public/               # Static assets
+└── types/                # Strict TypeScript interfaces
 ```
 
-## Project Structure
+---
 
-```
-├── app/                  # Next.js App Router
-│   ├── (auth)/           # Authentication pages
-│   ├── (dashboard)/      # Dashboard pages (fleet, vehicles, drivers, alerts, AI, simulator)
-│   └── api/              # API route handlers
-├── components/           # React components
-│   ├── layout/           # Layout components (sidebar, topbar, page-header)
-│   └── ui/               # Base UI components (shadcn/ui)
-├── config/               # Application configuration
-├── docs/                 # Architecture and protocol documentation
-├── hooks/                # React hooks
-├── lib/                  # Business logic
-│   ├── ai/               # Groq AI integration
-│   ├── api/              # API utilities
-│   ├── safety/           # Safety scoring and severity
-│   ├── supabase/         # Supabase client configuration
-│   └── telemetry/        # Telemetry validation and processing
-├── supabase/             # Database migrations and seed data
-├── tests/                # Unit and integration tests
-└── types/                # TypeScript domain types
-```
+## 📜 License & Acknowledgements
 
-## Scripts
-
-```bash
-npm run dev          # Start development server
-npm run build        # Production build
-npm run lint         # ESLint
-npm run type-check   # TypeScript type checking
-npm run test         # Run unit tests
-npm run test:e2e     # Run end-to-end tests
-```
-
-## License
-
-Built for MSME Hackathon 6.0.
+- Built specifically for **MSME Hackathon 6.0**.
+- UI inspired by modern, premium, dark-mode SaaS platforms.
