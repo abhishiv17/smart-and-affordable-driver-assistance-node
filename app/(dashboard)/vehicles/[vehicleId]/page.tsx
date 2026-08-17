@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { Section } from '@/components/dashboard/section';
 import { StatCard } from '@/components/dashboard/stat-card';
@@ -50,7 +50,7 @@ export default async function VehicleDetailPage({
   params: Promise<{ vehicleId: string }>;
 }) {
   const { vehicleId } = await params;
-  const supabase = createAdminClient();
+  const supabase = await createClient();
 
   // Parallel data fetches
   const [vehicleResult, alertsResult, telemetryResult, tripsResult, eventCountsResult] =

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createGroq } from '@ai-sdk/groq';
 import { generateObject } from 'ai';
+import { createClient } from '@/lib/supabase/server';
+import { createGroq } from '@ai-sdk/groq';
+import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
-import { createAdminClient } from '@/lib/supabase/admin';
 
 // Initialize Groq provider
 const groq = createGroq({
@@ -39,7 +40,13 @@ export async function POST(req: Request) {
     }
 
     // 1. Fetch real context from Supabase
-    const supabase = createAdminClient();
+    const supabase = await createClient();
+
+    // Check if user is authenticated
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     let query = supabase
       .from('alerts')

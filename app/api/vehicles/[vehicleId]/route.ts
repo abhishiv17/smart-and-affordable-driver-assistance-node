@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { errorResponse } from '@/lib/api/errors';
 
 /**
@@ -16,7 +16,7 @@ export async function PUT(
     const body = await request.json();
     const { vehicle_number, model, driver_id, device_id, status } = body;
 
-    const supabase = createAdminClient();
+    const supabase = await createClient();
 
     // Build update payload — only include fields that were provided
     const updates: Record<string, unknown> = {};
@@ -70,7 +70,7 @@ export async function DELETE(
 ) {
   try {
     const { vehicleId } = await params;
-    const supabase = createAdminClient();
+    const supabase = await createClient();
 
     // Unlink device first
     await supabase.from('devices').update({ vehicle_id: null }).eq('vehicle_id', vehicleId);

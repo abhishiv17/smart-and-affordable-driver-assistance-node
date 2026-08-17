@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/layout/sidebar';
+﻿import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
 import { RealtimeAlertToasts } from '@/components/realtime/realtime-alert-toasts';
 

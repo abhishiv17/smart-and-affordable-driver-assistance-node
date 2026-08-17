@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import { createAdminClient } from '@/lib/supabase/admin';
+﻿import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { Section } from '@/components/dashboard/section';
 import { StatusBadge } from '@/components/dashboard/status-badge';
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function DriversPage() {
-  const supabase = createAdminClient();
+  const supabase = await createClient();
 
   const { data: drivers, error } = await supabase
     .from('drivers')
@@ -77,7 +77,7 @@ export default async function DriversPage() {
                         {driver.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">{driver.phone ?? '—'}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{driver.phone ?? 'â€”'}</td>
                     <td className="px-4 py-3">
                       <StatusBadge variant="driver" status={driver.status} dot={driver.status === 'ACTIVE'} />
                     </td>

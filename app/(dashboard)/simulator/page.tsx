@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/page-header';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { SimulatorClient } from '@/components/simulator/simulator-client';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function SimulatorPage() {
-  const supabase = createAdminClient();
+  const supabase = await createClient();
 
   // Fetch all vehicles that have an assigned device_id
   const { data: vehicles } = await supabase

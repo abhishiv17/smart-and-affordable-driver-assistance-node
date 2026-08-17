@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import { createAdminClient } from '@/lib/supabase/admin';
+﻿import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { LiveDashboard } from '@/components/realtime/live-dashboard';
 import type { DbVehicle } from '@/types/database';
@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 /**
- * Dashboard page — SSR fetches initial data, LiveDashboard client component
+ * Dashboard page â€” SSR fetches initial data, LiveDashboard client component
  * handles realtime subscriptions and live UI updates.
  */
 export default async function DashboardPage() {
-  const supabase = createAdminClient();
+  const supabase = await createClient();
 
   const [vehiclesResult, alertsResult, devicesResult] = await Promise.all([
     supabase.from('vehicles').select('*'),

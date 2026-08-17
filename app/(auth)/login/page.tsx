@@ -1,43 +1,27 @@
 import type { Metadata } from 'next';
+import { LoginForm } from '@/components/auth/login-form';
 import { Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Login',
-  description: 'Sign in to SADAN fleet safety platform.',
+  title: 'Login - SADAN',
+  description: 'Login to the SADAN Fleet Command Center',
 };
 
-/**
- * Login page.
- * Phase 2+: Will implement Supabase Auth with email/password and OAuth.
- */
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm">
-        {/* Brand */}
-        <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600">
-            <Shield className="h-6 w-6 text-white" />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
+      <div className="w-full max-w-md space-y-8">
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 mb-6">
+            <Shield className="h-8 w-8 text-primary" />
           </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              SADAN
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Fleet Safety Intelligence Platform
-            </p>
-          </div>
-        </div>
-
-        {/* Login form placeholder */}
-        <div className="rounded-lg border border-dashed border-border p-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            Authentication will be implemented with Supabase Auth in a future phase.
-          </p>
-          <p className="mt-3 rounded-md bg-muted px-3 py-1.5 font-mono text-xs text-muted-foreground">
-            Coming in Phase 2
+          <h1 className="text-3xl font-bold tracking-tight">SADAN</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Smart and Affordable Driver Assistance Node
           </p>
         </div>
+        
+        <LoginForm />
       </div>
     </div>
   );

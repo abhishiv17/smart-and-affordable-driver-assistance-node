@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import { createAdminClient } from '@/lib/supabase/admin';
+﻿import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
 import { LiveMap } from '@/components/realtime/live-map';
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function MapPage() {
-  const supabase = createAdminClient();
+  const supabase = await createClient();
 
   const { data: vehicles } = await supabase
     .from('vehicles')

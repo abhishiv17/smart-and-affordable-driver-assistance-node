@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/page-header';
 import { AIReportView } from '@/components/ai/ai-report-view';
 

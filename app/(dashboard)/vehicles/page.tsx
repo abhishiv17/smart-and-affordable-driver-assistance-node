@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import { createAdminClient } from '@/lib/supabase/admin';
+﻿import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { Section } from '@/components/dashboard/section';
 import { SafetyScoreRing } from '@/components/dashboard/safety-score-ring';
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function VehiclesPage() {
-  const supabase = createAdminClient();
+  const supabase = await createClient();
 
   const { data: vehicles, error } = await supabase
     .from('vehicles')
@@ -89,8 +89,8 @@ export default async function VehiclesPage() {
                           {vehicle.vehicle_number}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">{vehicle.model ?? '—'}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{driver?.name ?? '—'}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{vehicle.model ?? 'â€”'}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{driver?.name ?? 'â€”'}</td>
                       <td className="px-4 py-3">
                         <StatusBadge variant="vehicle" status={vehicle.status} dot={vehicle.status === 'ACTIVE'} />
                       </td>
@@ -111,7 +111,7 @@ export default async function VehiclesPage() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-xs text-muted-foreground">
-                        {vehicle.last_seen ? formatRelativeTime(vehicle.last_seen) : '—'}
+                        {vehicle.last_seen ? formatRelativeTime(vehicle.last_seen) : 'â€”'}
                       </td>
                     </tr>
                   );

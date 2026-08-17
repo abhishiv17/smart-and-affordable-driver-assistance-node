@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { errorResponse } from '@/lib/api/errors';
 
 /**
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get('limit') ?? '50', 10) || 50, 200);
     const offset = parseInt(searchParams.get('offset') ?? '0', 10) || 0;
 
-    const supabase = createAdminClient();
+    const supabase = await createClient();
 
     let query = supabase
       .from('alerts')
@@ -68,7 +68,7 @@ export async function PATCH(request: NextRequest) {
       return errorResponse('alertId is required', 'BAD_REQUEST', 400);
     }
 
-    const supabase = createAdminClient();
+    const supabase = await createClient();
 
     const { error } = await supabase
       .from('alerts')

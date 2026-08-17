@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { errorResponse } from '@/lib/api/errors';
 
 /**
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const unlinked = searchParams.get('unlinked');
 
-    const supabase = createAdminClient();
+    const supabase = await createClient();
 
     let query = supabase
       .from('devices')
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       return errorResponse('device_serial is required', 'BAD_REQUEST', 400);
     }
 
-    const supabase = createAdminClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase
       .from('devices')
