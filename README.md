@@ -7,25 +7,25 @@
 
 ---
 
-## 🚦 The Problem
+## The Problem
 Small fleet operators in India rely heavily on legacy commercial vehicles lacking modern safety features. On long, arduous routes, drivers face immense fatigue. Harsh driving (sudden braking, rapid acceleration) often goes undetected, and fleet managers operate with zero visibility into on-road realities until an accident occurs.
 
-## 💡 The Solution
+## The Solution
 **SADAN** bridges this gap using a hybrid Edge-Cloud architecture. 
 An affordable ARM-based edge device installed in the vehicle acts as a localized "black box" and safety monitor. It analyzes driver state locally to provide instant acoustic alerts, while simultaneously syncing telemetry to a cloud dashboard for fleet-wide monitoring and AI-powered intelligence.
 
 ### Key Features
-- **👀 Real-Time Drowsiness Detection**: Uses a NoIR camera and facial landmark analysis on the edge.
-- **🏎️ Harsh Driving Detection**: Analyzes 6-axis IMU data to detect hard braking, sudden acceleration, and erratic steering.
-- **⚡ Zero-Latency Alerts**: Alerts the driver instantly via a local buzzer—no cloud round-trip required.
-- **🛰️ Live Fleet Tracking**: Real-time GPS location tracking on a dark-mode, high-performance MapLibre GL dashboard.
-- **🧠 AI Safety Intelligence**: Leverages Groq's blazing-fast LLM API to analyze telemetry data and generate comprehensive, natural-language safety reports.
-- **📴 Offline Resilience**: Safety-critical detections and alerts continue working even when cellular connectivity drops.
-- **🎮 Built-in Simulator**: Features a web-based edge device simulator to generate live, realistic telemetry for testing and demonstration.
+- **Real-Time Drowsiness Detection**: Uses a NoIR camera and facial landmark analysis on the edge.
+- **Harsh Driving Detection**: Analyzes 6-axis IMU data to detect hard braking, sudden acceleration, and erratic steering.
+- **Zero-Latency Alerts**: Alerts the driver instantly via a local buzzer—no cloud round-trip required.
+- **Live Fleet Tracking**: Real-time GPS location tracking on a dark-mode, high-performance MapLibre GL dashboard.
+- **AI Safety Intelligence**: Leverages Groq's blazing-fast LLM API to analyze telemetry data and generate comprehensive, natural-language safety reports.
+- **Offline Resilience**: Safety-critical detections and alerts continue working even when cellular connectivity drops.
+- **Built-in Simulator**: Features a web-based edge device simulator to generate live, realistic telemetry for testing and demonstration.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 SADAN employs a robust Edge-to-Cloud data flow.
 
@@ -47,7 +47,7 @@ graph TD
     end
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Domain | Technologies Used |
 |---|---|
@@ -61,7 +61,7 @@ graph TD
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 20+
@@ -98,7 +98,7 @@ graph TD
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 ├── app/                  # Next.js App Router (Dashboard, API, Auth)
@@ -113,7 +113,7 @@ graph TD
 
 ---
 
-## 📜 License & Acknowledgements
+## License & Acknowledgements
 
 - Built specifically for **MSME Hackathon 6.0**.
 - UI inspired by modern, premium, dark-mode SaaS platforms.
