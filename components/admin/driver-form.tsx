@@ -70,7 +70,7 @@ export function DriverForm({ open, onOpenChange, editData }: DriverFormProps) {
 
       if (!res.ok) {
         const err = await res.json();
-        setError(err.error?.message ?? 'Failed to save');
+        setError(err.message || err.error?.message || 'Failed to save');
         return;
       }
 

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { generateObject } from 'ai';
 import { createClient } from '@/lib/supabase/server';
 import { createGroq } from '@ai-sdk/groq';
-import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 
 // Initialize Groq provider
@@ -50,7 +49,7 @@ export async function POST(req: Request) {
 
     let query = supabase
       .from('alerts')
-      .select('*, vehicles:vehicle_id(label)')
+      .select('*, vehicles:vehicle_id(vehicle_number)')
       .order('created_at', { ascending: false })
       .limit(50);
       
@@ -68,7 +67,7 @@ export async function POST(req: Request) {
     // 2. Format the context for the LLM
     const contextStr = recentAlerts && recentAlerts.length > 0
       ? recentAlerts.map((a: any) => 
-          `[${new Date(a.created_at).toLocaleString()}] Vehicle: ${a.vehicles?.label || a.vehicle_id} | Type: ${a.type} | Severity: ${a.severity} | Status: ${a.status} | Msg: ${a.message}`
+          `[${new Date(a.created_at).toLocaleString()}] Vehicle: ${a.vehicles?.vehicle_number || a.vehicle_id} | Type: ${a.type} | Severity: ${a.severity} | Msg: ${a.message}`
         ).join('\n')
       : 'No recent alerts found in the database. The fleet is operating perfectly safely.';
 
@@ -109,9 +108,9 @@ export async function POST(req: Request) {
       5. Adopt a professional, industrial-safety tone.
     `;
 
-    // We use llama3-8b-8192 for maximum speed
+    // We use an available model in the current environment
     const { object } = await generateObject({
-      model: groq('llama3-8b-8192'),
+      model: groq('openai/gpt-oss-20b'),
       schema: reportSchema,
       prompt: systemPrompt,
     });

@@ -1,0 +1,85 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { DriverForm } from '@/components/admin/driver-form';
+
+interface DriverRowActionsProps {
+  driver: {
+    id: string;
+    name: string;
+    phone: string | null;
+    status: string;
+  };
+}
+
+export function DriverRowActions({ driver }: DriverRowActionsProps) {
+  const router = useRouter();
+  const [formOpen, setFormOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function handleDelete() {
+    if (!confirm('Are you sure you want to delete this driver? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/drivers/${driver.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message || err.error?.message || 'Failed to delete driver');
+        return;
+      }
+
+      router.refresh();
+    } catch (err) {
+      alert('Network error while deleting driver');
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+          disabled={isDeleting}
+        >
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => setFormOpen(true)}>
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleDelete} className="text-red-500 focus:text-red-500">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DriverForm
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        editData={driver}
+      />
+    </>
+  );
+}

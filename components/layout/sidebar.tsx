@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useState } from 'react';
+import { LogoutButton } from '@/components/auth/logout-button';
 
 /**
  * Main sidebar navigation for the SADAN dashboard.
@@ -126,17 +127,18 @@ export function Sidebar() {
       </ScrollArea>
 
       {/* Footer */}
-      <div className="border-t border-border p-3">
+      <div className="border-t border-border p-3 space-y-3">
         {!collapsed ? (
           <div className="flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2">
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
             <span className="text-xs text-muted-foreground">System Online</span>
           </div>
         ) : (
-          <div className="flex justify-center">
+          <div className="flex justify-center pb-2">
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
           </div>
         )}
+        <LogoutButton collapsed={collapsed} />
       </div>
     </aside>
   );

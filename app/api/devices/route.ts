@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { errorResponse } from '@/lib/api/errors';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/devices
  *

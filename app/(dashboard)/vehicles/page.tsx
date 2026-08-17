@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { Section } from '@/components/dashboard/section';
@@ -11,6 +11,7 @@ import { StatCard } from '@/components/dashboard/stat-card';
 import { Truck, Activity, WifiOff, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import { VehicleActions } from '@/components/admin/vehicle-actions';
+import { VehicleRowActions } from '@/components/admin/vehicle-row-actions';
 
 export const metadata: Metadata = {
   title: 'Vehicles',
@@ -72,6 +73,7 @@ export default async function VehiclesPage() {
                   <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Safety</th>
                   <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Device</th>
                   <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Last Seen</th>
+                  <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,7 +113,10 @@ export default async function VehiclesPage() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-xs text-muted-foreground">
-                        {vehicle.last_seen ? formatRelativeTime(vehicle.last_seen) : 'â€”'}
+                        {vehicle.last_seen ? formatRelativeTime(vehicle.last_seen) : '—'}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <VehicleRowActions vehicle={vehicle} />
                       </td>
                     </tr>
                   );

@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { Section } from '@/components/dashboard/section';
@@ -9,6 +9,7 @@ import { formatRelativeTime } from '@/lib/utils/formatters';
 import { Users, UserCheck, UserX } from 'lucide-react';
 import Link from 'next/link';
 import { DriverActions } from '@/components/admin/driver-actions';
+import { DriverRowActions } from '@/components/admin/driver-row-actions';
 
 export const metadata: Metadata = {
   title: 'Drivers',
@@ -64,6 +65,7 @@ export default async function DriversPage() {
                   <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Phone</th>
                   <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
                   <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Joined</th>
+                  <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -83,6 +85,9 @@ export default async function DriversPage() {
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground">
                       {formatRelativeTime(driver.created_at)}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <DriverRowActions driver={driver} />
                     </td>
                   </tr>
                 ))}

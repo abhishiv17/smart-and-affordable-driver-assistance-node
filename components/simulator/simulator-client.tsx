@@ -5,7 +5,7 @@ import { useSimulator } from '@/hooks/use-simulator';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Play, Square, AlertTriangle, Radio, WifiOff, Wifi, EyeOff, Activity } from 'lucide-react';
+import { Play, Square, AlertTriangle, Radio, WifiOff, Wifi, EyeOff, Activity, RefreshCw, Clapperboard } from 'lucide-react';
 import type { DbVehicle } from '@/types/database';
 
 interface SimulatorClientProps {
@@ -14,6 +14,8 @@ interface SimulatorClientProps {
 
 export function SimulatorClient({ vehicles }: SimulatorClientProps) {
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>('');
+  const [isResetting, setIsResetting] = useState(false);
+  const [isDemoRunning, setIsDemoRunning] = useState(false);
 
   const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId) || null;
   const deviceId = selectedVehicle?.device_id || null;
@@ -28,9 +30,84 @@ export function SimulatorClient({ vehicles }: SimulatorClientProps) {
     isSending,
   } = useSimulator({ vehicle: selectedVehicle, deviceId });
 
+  const resetDatabase = async () => {
+    if (!confirm('Are you sure you want to reset the database? This will delete all telemetry, alerts, and AI reports.')) return;
+    setIsResetting(true);
+    try {
+      await fetch('/api/demo/reset', { method: 'POST' });
+      alert('Database reset successfully. Reloading...');
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to reset database.');
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const runDemoScript = async () => {
+    if (!selectedVehicle || !deviceId) {
+      alert('Please select a vehicle first.');
+      return;
+    }
+    
+    setIsDemoRunning(true);
+    
+    // T+0s: Start Trip
+    if (!isDriving) toggleDriving();
+    
+    // T+5s: Drowsiness
+    setTimeout(() => triggerIncident('DROWSINESS'), 5000);
+    
+    // T+10s: Go Offline
+    setTimeout(() => triggerIncident('DEVICE_OFFLINE'), 10000);
+    
+    // T+14s: Harsh Braking (offline)
+    setTimeout(() => triggerIncident('HARSH_BRAKING'), 14000);
+    
+    // T+18s: Go Online (sync)
+    setTimeout(() => triggerIncident('DEVICE_RECOVERED'), 18000);
+    
+    // T+22s: End Trip
+    setTimeout(() => {
+      toggleDriving();
+      setIsDemoRunning(false);
+      alert('Demo Script Complete! Check the Dashboard and AI Reports.');
+    }, 22000);
+  };
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="flex flex-col gap-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Presentation Mode</CardTitle>
+                <CardDescription>Automated demo orchestrator and database reset.</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="grid gap-3 sm:grid-cols-2">
+            <Button
+              variant="outline"
+              className="w-full text-red-500 hover:text-red-600 hover:bg-red-500/10"
+              onClick={resetDatabase}
+              disabled={isResetting || isDemoRunning}
+            >
+              <RefreshCw className={`mr-2 h-4 w-4 ${isResetting ? 'animate-spin' : ''}`} /> Reset DB
+            </Button>
+            <Button
+              className="w-full bg-violet-600 hover:bg-violet-700"
+              disabled={!selectedVehicle || !deviceId || isDemoRunning}
+              onClick={runDemoScript}
+            >
+              <Clapperboard className="mr-2 h-4 w-4" /> 
+              {isDemoRunning ? 'Running Script...' : 'Run Demo Script'}
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Hardware Configuration</CardTitle>

@@ -59,7 +59,25 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient();
-    const fleetId = fleet_id ?? 'a0000000-0000-0000-0000-000000000001';
+
+    // Dynamically resolve user's fleet
+    let fleetId = fleet_id;
+    if (!fleetId) {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) return errorResponse('Unauthorized', 'UNAUTHORIZED', 401);
+
+      const { data: fleetMember } = await supabase
+        .from('fleet_members')
+        .select('fleet_id')
+        .eq('user_id', user.id)
+        .limit(1)
+        .single();
+        
+      if (!fleetMember) {
+        return errorResponse('User is not assigned to any fleet', 'FORBIDDEN', 403);
+      }
+      fleetId = fleetMember.fleet_id;
+    }
 
     const { data, error } = await supabase
       .from('vehicles')
