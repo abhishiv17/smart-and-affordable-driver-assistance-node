@@ -115,9 +115,14 @@ export function AIReportView({
                   <CardTitle className="text-2xl flex items-center gap-2">
                     <Brain className="h-6 w-6 text-primary" /> Executive Summary
                   </CardTitle>
-                  <Badge variant="outline" className={cn("text-sm font-bold border px-3 py-1 uppercase tracking-wider", riskColors[report.riskLevel])}>
-                    {report.riskLevel} RISK
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/20 px-2 py-1 flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3" /> Saved to Records
+                    </Badge>
+                    <Badge variant="outline" className={cn("text-sm font-bold border px-3 py-1 uppercase tracking-wider", riskColors[report.riskLevel])}>
+                      {report.riskLevel} RISK
+                    </Badge>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DriverForm } from '@/components/admin/driver-form';
+import { AlertDialog } from '@/components/ui/alert-dialog';
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog';
 
 interface DriverRowActionsProps {
   driver: {
@@ -26,11 +27,17 @@ export function DriverRowActions({ driver }: DriverRowActionsProps) {
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { confirm, dialogProps } = useConfirmDialog();
 
   async function handleDelete() {
-    if (!confirm('Are you sure you want to delete this driver? This action cannot be undone.')) {
-      return;
-    }
+    const confirmed = await confirm({
+      title: `Delete ${driver.name}?`,
+      description:
+        'This will permanently remove the driver from the fleet. This action cannot be undone.',
+      variant: 'destructive',
+      confirmLabel: 'Delete Driver',
+    });
+    if (!confirmed) return;
 
     setIsDeleting(true);
     try {
@@ -40,13 +47,13 @@ export function DriverRowActions({ driver }: DriverRowActionsProps) {
 
       if (!res.ok) {
         const err = await res.json();
-        alert(err.message || err.error?.message || 'Failed to delete driver');
+        console.error('Failed to delete driver:', err.message || err.error?.message);
         return;
       }
 
       router.refresh();
-    } catch (err) {
-      alert('Network error while deleting driver');
+    } catch {
+      console.error('Network error while deleting driver');
     } finally {
       setIsDeleting(false);
     }
@@ -80,6 +87,8 @@ export function DriverRowActions({ driver }: DriverRowActionsProps) {
         onOpenChange={setFormOpen}
         editData={driver}
       />
+
+      <AlertDialog {...dialogProps} />
     </>
   );
 }

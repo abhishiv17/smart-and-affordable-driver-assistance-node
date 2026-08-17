@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { VehicleForm } from '@/components/admin/vehicle-form';
+import { AlertDialog } from '@/components/ui/alert-dialog';
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog';
 
 interface VehicleRowActionsProps {
   vehicle: {
@@ -27,11 +28,17 @@ export function VehicleRowActions({ vehicle }: VehicleRowActionsProps) {
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { confirm, dialogProps } = useConfirmDialog();
 
   async function handleDelete() {
-    if (!confirm('Are you sure you want to delete this vehicle? This will also remove associated trips and alerts.')) {
-      return;
-    }
+    const confirmed = await confirm({
+      title: `Delete ${vehicle.vehicle_number}?`,
+      description:
+        'This will permanently delete the vehicle and remove all associated trips and alerts. This action cannot be undone.',
+      variant: 'destructive',
+      confirmLabel: 'Delete Vehicle',
+    });
+    if (!confirmed) return;
 
     setIsDeleting(true);
     try {
@@ -41,13 +48,13 @@ export function VehicleRowActions({ vehicle }: VehicleRowActionsProps) {
 
       if (!res.ok) {
         const err = await res.json();
-        alert(err.message || err.error?.message || 'Failed to delete vehicle');
+        console.error('Failed to delete vehicle:', err.message || err.error?.message);
         return;
       }
 
       router.refresh();
-    } catch (err) {
-      alert('Network error while deleting vehicle');
+    } catch {
+      console.error('Network error while deleting vehicle');
     } finally {
       setIsDeleting(false);
     }
@@ -81,6 +88,8 @@ export function VehicleRowActions({ vehicle }: VehicleRowActionsProps) {
         onOpenChange={setFormOpen}
         editData={vehicle}
       />
+
+      <AlertDialog {...dialogProps} />
     </>
   );
 }

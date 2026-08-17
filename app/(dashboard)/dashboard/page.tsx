@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { LiveDashboard } from '@/components/realtime/live-dashboard';
@@ -36,8 +36,8 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader
-        title="Fleet Command Center"
-        description="Real-time safety overview for your fleet"
+        title="Safety Command Center"
+        description="Real-time fleet safety monitoring and incident response"
       />
       <LiveDashboard
         initialVehicles={vehicles}

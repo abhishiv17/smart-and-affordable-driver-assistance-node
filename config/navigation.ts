@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   Brain,
   Radio,
+  LineChart,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -90,6 +91,16 @@ export const navigationConfig: NavGroup[] = [
         label: 'Device Simulator',
         href: '/simulator',
         icon: Radio,
+      },
+    ],
+  },
+  {
+    label: 'Business',
+    items: [
+      {
+        label: 'Why SADAN?',
+        href: '/business-case',
+        icon: LineChart,
       },
     ],
   },

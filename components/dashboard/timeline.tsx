@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import type { AlertSeverity } from '@/types/alert';
 import { formatRelativeTime } from '@/lib/utils/formatters';
+import Link from 'next/link';
 
 // =============================================================================
 // Types
@@ -18,6 +19,8 @@ export interface TimelineItem {
   severity?: AlertSeverity;
   /** Optional icon or custom node for the dot */
   icon?: React.ReactNode;
+  /** Optional link to a detail page */
+  href?: string;
 }
 
 interface TimelineProps {
@@ -81,7 +84,13 @@ export function Timeline({ items, className }: TimelineProps) {
             <div className="flex-1 min-w-0 pb-1">
               <div className="flex items-baseline justify-between gap-2">
                 <p className="text-sm font-medium text-foreground truncate">
-                  {item.title}
+                  {item.href ? (
+                    <Link href={item.href} className="hover:underline hover:text-violet-400 transition-colors">
+                      {item.title}
+                    </Link>
+                  ) : (
+                    item.title
+                  )}
                 </p>
                 <span className="shrink-0 text-[11px] text-muted-foreground">
                   {formatRelativeTime(item.timestamp)}

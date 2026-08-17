@@ -9,6 +9,7 @@ import { StatCard } from '@/components/dashboard/stat-card';
 import { formatRelativeTime } from '@/lib/utils/formatters';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertTriangle, CheckCircle, Bell } from 'lucide-react';
+import Link from 'next/link';
 import type { DbAlert } from '@/types/database';
 
 interface LiveAlertFeedProps {
@@ -73,7 +74,9 @@ export function LiveAlertFeed({ initialAlerts }: LiveAlertFeedProps) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-sm font-medium text-foreground">
-                            {alert.message}
+                            <Link href={`/alerts/${alert.id}`} className="hover:underline hover:text-violet-400 transition-colors">
+                              {alert.message}
+                            </Link>
                           </p>
                           <StatusBadge variant="severity" status={alert.severity} />
                           {!alert.acknowledged && (
