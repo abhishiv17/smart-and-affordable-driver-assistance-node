@@ -2,8 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
-import * as maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 // =============================================================================
 // Types
@@ -60,28 +60,32 @@ export function FleetMap({
   onMarkerClick,
 }: FleetMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<maplibregl.Map | null>(null);
-  const markersRef = useRef<maplibregl.Marker[]>([]);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
 
   // Initialize map
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    const envStyle = process.env.NEXT_PUBLIC_MAP_STYLE_URL;
-    const mapStyle = (envStyle && envStyle.startsWith('http'))
-      ? envStyle
-      : 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-
-    map.current = new maplibregl.Map({
+    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+    if (mapboxToken) {
+      mapboxgl.accessToken = mapboxToken;
+    } else {
+      console.warn('Mapbox token is missing! Please set NEXT_PUBLIC_MAPBOX_TOKEN in your .env file.');
+    }
+    
+    map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: mapStyle,
+      style: 'mapbox://styles/mapbox/streets-v12',
       center,
       zoom,
+      pitch: 45, // Isometric 3D angle
+      bearing: -10, // Slight tilt
       attributionControl: false,
     });
 
     map.current.addControl(
-      new maplibregl.NavigationControl({ showCompass: false }),
+      new mapboxgl.NavigationControl({ showCompass: false }),
       'top-right'
     );
 
@@ -103,23 +107,40 @@ export function FleetMap({
     markers.forEach(vehicle => {
       const color = STATUS_COLORS[vehicle.status] ?? STATUS_COLORS.OFFLINE;
 
-      // Create custom marker element
+      // Create premium glowing marker element
       const el = document.createElement('div');
-      el.className = 'fleet-marker';
-      el.style.cssText = `
+      el.className = 'fleet-marker relative flex items-center justify-center';
+      el.style.width = '24px';
+      el.style.height = '24px';
+      el.style.cursor = 'pointer';
+
+      // Inner dot
+      const dot = document.createElement('div');
+      dot.style.cssText = `
         width: 12px;
         height: 12px;
         background-color: ${color};
-        border: 2px solid rgba(0,0,0,0.5);
+        border: 2px solid #18181b;
         border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0 0 6px ${color}80;
+        box-shadow: 0 0 10px ${color}, 0 0 20px ${color}80;
+        z-index: 2;
       `;
+      el.appendChild(dot);
 
-      const marker = new maplibregl.Marker({ element: el })
+      // Pulsing ring for active vehicles
+      if (vehicle.status === 'ACTIVE') {
+        const ring = document.createElement('div');
+        ring.className = 'absolute inset-0 rounded-full animate-ping';
+        ring.style.backgroundColor = color;
+        ring.style.opacity = '0.4';
+        ring.style.zIndex = '1';
+        el.appendChild(ring);
+      }
+
+      const marker = new mapboxgl.Marker({ element: el })
         .setLngLat([vehicle.longitude, vehicle.latitude])
         .setPopup(
-          new maplibregl.Popup({ offset: 12, closeButton: false })
+          new mapboxgl.Popup({ offset: 12, closeButton: false })
             .setHTML(`
               <div style="font-family: system-ui; padding: 4px 0;">
                 <div style="font-weight: 600; font-size: 12px;">${vehicle.label}</div>

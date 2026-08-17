@@ -24,13 +24,15 @@ export const telemetryEventTypeSchema = z.enum([
  */
 export const telemetryNetworkStatusSchema = z.enum(['ONLINE', 'OFFLINE']);
 
+const uuidSchema = z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "Invalid UUID");
+
 /**
  * Schema for a single telemetry event.
  */
 export const telemetryEventSchema = z.object({
-  id: z.string().uuid(),
-  deviceId: z.string().uuid(),
-  vehicleId: z.string().uuid(),
+  id: uuidSchema,
+  deviceId: uuidSchema,
+  vehicleId: uuidSchema,
   timestamp: z.string().datetime(),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
@@ -47,7 +49,7 @@ export const telemetryEventSchema = z.object({
  */
 export const telemetrySubmissionSchema = z.object({
   events: z.array(telemetryEventSchema).min(1).max(100),
-  deviceId: z.string().uuid(),
+  deviceId: uuidSchema,
   submittedAt: z.string().datetime(),
 });
 
