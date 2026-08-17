@@ -23,7 +23,13 @@ interface Report {
   insights: Insight[];
 }
 
-export function AIReportView() {
+export function AIReportView({ 
+  type = 'FLEET_SAFETY_SUMMARY',
+  driverId,
+}: { 
+  type?: 'FLEET_SAFETY_SUMMARY' | 'DRIVER_ASSESSMENT';
+  driverId?: string;
+}) {
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +41,7 @@ export function AIReportView() {
       const res = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'FLEET_SAFETY_SUMMARY' })
+        body: JSON.stringify({ type, driverId })
       });
 
       const data = await res.json();
@@ -66,10 +72,12 @@ export function AIReportView() {
             </div>
             <h2 className="text-2xl font-bold tracking-tight mb-2">Generate AI Intelligence</h2>
             <p className="text-muted-foreground max-w-md mb-8">
-              Our advanced Groq-powered AI will analyze the latest telemetry, alerts, and driver behavior to produce a comprehensive safety report.
+              {type === 'DRIVER_ASSESSMENT' 
+                ? 'Generate a personalized behavioral analysis and coaching plan for this driver based on their recent telemetry.' 
+                : 'Our advanced Groq-powered AI will analyze the latest telemetry, alerts, and driver behavior to produce a comprehensive safety report.'}
             </p>
             <Button size="lg" onClick={generateReport} className="gap-2 font-semibold">
-              <Zap className="h-4 w-4" /> Generate Fleet Report
+              <Zap className="h-4 w-4" /> Generate {type === 'DRIVER_ASSESSMENT' ? 'Driver Assessment' : 'Fleet Report'}
             </Button>
           </CardContent>
         </Card>

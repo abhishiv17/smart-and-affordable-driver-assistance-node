@@ -7,6 +7,7 @@ import { StatCard } from '@/components/dashboard/stat-card';
 import { StatusBadge } from '@/components/dashboard/status-badge';
 import { Timeline } from '@/components/dashboard/timeline';
 import { EmptyState } from '@/components/dashboard/empty-state';
+import { AIReportView } from '@/components/ai/ai-report-view';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatRelativeTime, formatDistance } from '@/lib/utils/formatters';
 import {
@@ -116,10 +117,17 @@ export default async function DriverDetailPage({
           accentColor="text-emerald-400"
         />
         <StatCard
-          label="Avg Trip Score"
-          value={avgTripScore !== null ? `${avgTripScore}/100` : '—'}
+          label="Current Safety Score"
+          value={assignedVehicles.length > 0 && assignedVehicles[0].safety_score !== null ? `${assignedVehicles[0].safety_score}/100` : '—'}
+          subtitle={assignedVehicles.length > 0 && assignedVehicles[0].safety_score !== null 
+            ? assignedVehicles[0].safety_score < 50 ? 'High Risk' : assignedVehicles[0].safety_score < 80 ? 'Medium Risk' : 'Low Risk'
+            : undefined}
           icon={User}
-          accentColor="text-cyan-400"
+          accentColor={
+            assignedVehicles.length > 0 && assignedVehicles[0].safety_score !== null
+              ? assignedVehicles[0].safety_score < 50 ? 'text-red-500' : assignedVehicles[0].safety_score < 80 ? 'text-yellow-500' : 'text-emerald-500'
+              : 'text-cyan-400'
+          }
         />
       </div>
 
@@ -169,6 +177,13 @@ export default async function DriverDetailPage({
           ) : (
             <Timeline items={timelineItems} />
           )}
+        </Section>
+      </div>
+
+      {/* AI Coaching Section */}
+      <div className="mt-6">
+        <Section title="AI Safety Coach">
+          <AIReportView type="DRIVER_ASSESSMENT" driverId={driverId} />
         </Section>
       </div>
     </>

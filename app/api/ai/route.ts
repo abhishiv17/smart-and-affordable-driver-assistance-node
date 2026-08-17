@@ -29,7 +29,7 @@ const reportSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { fleetId, type } = body;
+    const { fleetId, type, driverId } = body;
 
     if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
@@ -41,12 +41,17 @@ export async function POST(req: Request) {
     // 1. Fetch real context from Supabase
     const supabase = createAdminClient();
 
-    // Fetch the latest 50 alerts
-    const { data: recentAlerts, error: alertsError } = await supabase
+    let query = supabase
       .from('alerts')
       .select('*, vehicles:vehicle_id(label)')
       .order('created_at', { ascending: false })
       .limit(50);
+      
+    if (type === 'DRIVER_ASSESSMENT' && driverId) {
+      query = query.eq('driver_id', driverId);
+    }
+
+    const { data: recentAlerts, error: alertsError } = await query;
 
     if (alertsError) {
       console.error('Failed to fetch alerts for AI:', alertsError);
@@ -61,7 +66,24 @@ export async function POST(req: Request) {
       : 'No recent alerts found in the database. The fleet is operating perfectly safely.';
 
     // 3. Ask Groq to analyze the data
-    const systemPrompt = `
+    const systemPrompt = type === 'DRIVER_ASSESSMENT' ? `
+      You are an expert Fleet Safety Analyst AI for the SADAN platform.
+      Your job is to analyze the raw telemetry and alert data for a specific driver and generate a strictly structured safety report.
+      
+      REPORT CONTEXT:
+      - Report Type: DRIVER_ASSESSMENT
+      - Timeframe: Recent activity
+
+      RAW DATA (Latest Alerts for this driver):
+      ${contextStr}
+
+      INSTRUCTIONS:
+      1. Analyze the driver's specific behavior for patterns (e.g., frequent drowsiness or harsh braking).
+      2. Determine the driver's risk level. If there are CRITICAL alerts, risk should be HIGH or CRITICAL.
+      3. Generate personalized coaching insights with actionable recommendations for the driver.
+      4. DO NOT hallucinate alerts that are not in the raw data. If no alerts are present, output that the driver has a perfect safety record.
+      5. Adopt an empathetic, coaching-focused tone.
+    ` : `
       You are an expert Fleet Safety Analyst AI for the SADAN platform.
       Your job is to analyze the raw telemetry and alert data provided and generate a strictly structured safety report.
       
