@@ -1,18 +1,41 @@
 import type { Metadata } from 'next';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { PageHeader } from '@/components/layout/page-header';
+import { Section } from '@/components/dashboard/section';
+import { SafetyScoreRing } from '@/components/dashboard/safety-score-ring';
+import { StatusBadge } from '@/components/dashboard/status-badge';
+import { EmptyState } from '@/components/dashboard/empty-state';
+import { formatRelativeTime } from '@/lib/utils/formatters';
 import { Card, CardContent } from '@/components/ui/card';
-import { Truck } from 'lucide-react';
+import { StatCard } from '@/components/dashboard/stat-card';
+import { Truck, Activity, WifiOff, Wrench } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Vehicles',
   description: 'Manage and monitor all vehicles in your fleet.',
 };
 
-/**
- * Vehicles list page.
- * Phase 2+: Will display vehicle list with safety scores, status, and search.
- */
-export default function VehiclesPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function VehiclesPage() {
+  const supabase = createAdminClient();
+
+  const { data: vehicles, error } = await supabase
+    .from('vehicles')
+    .select('*, drivers(name), devices:devices!vehicles_device_id_fkey(device_serial, connectivity_status)')
+    .order('vehicle_number', { ascending: true });
+
+  if (error) {
+    console.error('[vehicles page] Query error:', error.message);
+  }
+
+  const allVehicles = vehicles ?? [];
+  const active = allVehicles.filter(v => v.status === 'ACTIVE').length;
+  const idle = allVehicles.filter(v => v.status === 'IDLE').length;
+  const offline = allVehicles.filter(v => v.status === 'OFFLINE').length;
+  const maintenance = allVehicles.filter(v => v.status === 'MAINTENANCE').length;
+
   return (
     <>
       <PageHeader
@@ -20,23 +43,82 @@ export default function VehiclesPage() {
         description="Manage and monitor all vehicles in your fleet"
       />
 
-      <Card className="border-dashed">
-        <CardContent className="flex flex-col items-center justify-center py-16">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-            <Truck className="h-6 w-6 text-muted-foreground" />
+      {/* Stats */}
+      <div className="grid gap-3 sm:grid-cols-4 mb-6">
+        <StatCard label="Active" value={active} icon={Truck} accentColor="text-emerald-400" />
+        <StatCard label="Idle" value={idle} icon={Activity} accentColor="text-amber-400" />
+        <StatCard label="Offline" value={offline} icon={WifiOff} accentColor="text-zinc-400" />
+        <StatCard label="Maintenance" value={maintenance} icon={Wrench} accentColor="text-blue-400" />
+      </div>
+
+      <Section title="Fleet">
+        {allVehicles.length === 0 ? (
+          <EmptyState
+            icon={Truck}
+            title="No vehicles"
+            description="Vehicles will appear here once the database is seeded."
+          />
+        ) : (
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Vehicle</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Model</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Driver</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Safety</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Device</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Last Seen</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allVehicles.map((vehicle) => {
+                  const driver = vehicle.drivers as { name: string } | null;
+                  const device = vehicle.devices as { device_serial: string; connectivity_status: string } | null;
+
+                  return (
+                    <tr key={vehicle.id} className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
+                      <td className="px-4 py-3">
+                        <Link
+                          href={`/vehicles/${vehicle.id}`}
+                          className="font-semibold text-foreground hover:text-primary transition-colors"
+                        >
+                          {vehicle.vehicle_number}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground">{vehicle.model ?? '—'}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{driver?.name ?? '—'}</td>
+                      <td className="px-4 py-3">
+                        <StatusBadge variant="vehicle" status={vehicle.status} dot={vehicle.status === 'ACTIVE'} />
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <SafetyScoreRing score={vehicle.safety_score ?? 100} size={32} strokeWidth={3} showLabel={false} />
+                          <span className="text-sm font-medium">{vehicle.safety_score ?? 100}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        {device ? (
+                          <StatusBadge
+                            variant="device"
+                            status={device.connectivity_status as 'ONLINE' | 'OFFLINE'}
+                          />
+                        ) : (
+                          <span className="text-xs text-muted-foreground">No device</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {vehicle.last_seen ? formatRelativeTime(vehicle.last_seen) : '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <h2 className="mt-4 text-lg font-semibold text-foreground">
-            Vehicle Fleet
-          </h2>
-          <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
-            Vehicle registration, safety scores, device status, and real-time
-            location tracking will be displayed here.
-          </p>
-          <p className="mt-4 rounded-md bg-muted px-3 py-1.5 font-mono text-xs text-muted-foreground">
-            Coming in Phase 2
-          </p>
-        </CardContent>
-      </Card>
+        )}
+      </Section>
     </>
   );
 }
