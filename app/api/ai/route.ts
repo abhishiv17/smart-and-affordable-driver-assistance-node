@@ -135,11 +135,12 @@ export async function POST(req: Request) {
       4. Cite specific vehicle numbers and driver names to prove you are analyzing real data.
       5. DO NOT hallucinate vehicles or alerts that are not in the raw data.
       6. Adopt a professional, industrial-safety tone.
+      7. YOU MUST OUTPUT STRICTLY VALID JSON THAT PERFECTLY MATCHES THE REQUIRED SCHEMA. NO MARKDOWN, NO PREFIXES, JUST RAW JSON.
     `;
 
     // We use a high-tier Groq model for superior reasoning
     const { object } = await generateObject({
-      model: groq('llama3-70b-8192'),
+      model: groq('openai/gpt-oss-120b'),
       schema: reportSchema,
       prompt: systemPrompt,
     });

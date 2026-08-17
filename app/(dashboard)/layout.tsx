@@ -2,6 +2,7 @@ import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
 import { RealtimeAlertToasts } from '@/components/realtime/realtime-alert-toasts';
 import { ToastProvider } from '@/components/dashboard/toast-notification';
+import { PresentationController } from '@/components/demo/presentation-controller';
 
 /**
  * Dashboard layout wrapping all authenticated routes.
@@ -30,6 +31,9 @@ export default function DashboardLayout({
 
         {/* Global realtime alert toasts */}
         <RealtimeAlertToasts />
+
+        {/* Presentation controller */}
+        <PresentationController />
       </div>
     </ToastProvider>
   );
