@@ -1,9 +1,9 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/page-header';
 import { AIReportView } from '@/components/ai/ai-report-view';
 
 export const metadata: Metadata = {
-  title: 'AI Intelligence',
+  title: 'Intelligence',
   description: 'AI-generated safety insights and fleet intelligence reports.',
 };
 
@@ -11,10 +11,10 @@ export default function AIPage() {
   return (
     <>
       <PageHeader
-        title="AI Intelligence"
-        description="AI-generated safety insights powered by Groq"
+        title="Intelligence"
+        description="What SADAN sees in your operations"
       />
-      <div className="mt-8">
+      <div className="mt-4">
         <AIReportView />
       </div>
     </>

@@ -37,10 +37,10 @@ interface FleetMapProps {
 // =============================================================================
 
 const STATUS_COLORS: Record<string, string> = {
-  ACTIVE: '#34d399',    // emerald-400
-  IDLE: '#fbbf24',      // amber-400
-  OFFLINE: '#71717a',   // zinc-500
-  MAINTENANCE: '#60a5fa', // blue-400
+  ACTIVE: '#2F684A',    // Bauhaus success
+  IDLE: '#D49A27',      // Bauhaus warning
+  OFFLINE: '#77756F',   // Bauhaus muted gray
+  MAINTENANCE: '#3157A5', // Bauhaus blue
 };
 
 // =============================================================================
@@ -76,7 +76,7 @@ export function FleetMap({
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: 'mapbox://styles/mapbox/light-v11',
       center,
       zoom,
       pitch: 45, // Isometric 3D angle
@@ -120,9 +120,9 @@ export function FleetMap({
         width: 12px;
         height: 12px;
         background-color: ${color};
-        border: 2px solid #18181b;
+        border: 2px solid #F4F1E8;
         border-radius: 50%;
-        box-shadow: 0 0 10px ${color}, 0 0 20px ${color}80;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.15);
         z-index: 2;
       `;
       el.appendChild(dot);

@@ -47,100 +47,103 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* SADAN Safety State Colors */
-  --color-safety-normal: oklch(0.75 0.18 155);
-  --color-safety-warning: oklch(0.80 0.16 85);
-  --color-safety-critical: oklch(0.63 0.24 25);
-  --color-safety-offline: oklch(0.55 0.01 0);
-  --color-safety-info: oklch(0.70 0.14 250);
+  /* ===================================================================
+     SADAN Bauhaus Design Tokens
+     =================================================================== */
 
-  /* Vehicle Status Colors */
-  --color-status-active: oklch(0.75 0.18 155);
-  --color-status-idle: oklch(0.80 0.16 85);
-  --color-status-offline: oklch(0.55 0.01 0);
-  --color-status-maintenance: oklch(0.70 0.14 250);
+  /* Bauhaus Accent Colors */
+  --color-bauhaus-red: #D94A38;
+  --color-bauhaus-yellow: #E7B83E;
+  --color-bauhaus-blue: #3157A5;
 
-  /* Score Band Colors */
-  --color-score-excellent: oklch(0.75 0.18 155);
-  --color-score-good: oklch(0.72 0.12 200);
-  --color-score-fair: oklch(0.80 0.16 85);
-  --color-score-poor: oklch(0.75 0.18 55);
-  --color-score-critical: oklch(0.63 0.24 25);
+  /* Functional Colors */
+  --color-sadan-success: #2F684A;
+  --color-sadan-warning: #D49A27;
+  --color-sadan-critical: #C83D32;
+
+  /* Base Palette */
+  --color-paper: #F4F1E8;
+  --color-ink: #151515;
+  --color-soft-gray: #D8D5CC;
+  --color-muted-gray: #77756F;
+
+  /* Vehicle Status Colors — remapped to Bauhaus palette */
+  --color-status-active: #2F684A;
+  --color-status-idle: #D49A27;
+  --color-status-offline: #77756F;
+  --color-status-maintenance: #3157A5;
+
+  /* Score Band Colors — remapped to Bauhaus palette */
+  --color-score-excellent: #2F684A;
+  --color-score-good: #3157A5;
+  --color-score-fair: #D49A27;
+  --color-score-poor: #D94A38;
+  --color-score-critical: #C83D32;
 }
 
 /* =============================================================================
-   SADAN Dark Theme — Default
-   Automotive safety operations aesthetic: dark, professional, industrial
+   SADAN Digital Bauhaus — Primary Theme
+   Paper canvas, ink typography, geometric structure
    ============================================================================= */
 
 :root {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.185 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.185 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.75 0.18 155);
-  --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.22 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.22 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.63 0.24 25);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.75 0.18 155);
-  --chart-1: oklch(0.75 0.18 155);
-  --chart-2: oklch(0.70 0.14 250);
-  --chart-3: oklch(0.80 0.16 85);
-  --chart-4: oklch(0.65 0.20 310);
-  --chart-5: oklch(0.72 0.12 200);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.12 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.75 0.18 155);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.20 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.75 0.18 155);
-}
+  /* Canvas */
+  --background: #F4F1E8;
+  --foreground: #151515;
 
-/* Light theme override (secondary, available for presentation mode) */
-.light {
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.45 0.18 155);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.50 0 0);
-  --accent: oklch(0.96 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.90 0 0);
-  --input: oklch(0.90 0 0);
-  --ring: oklch(0.45 0.18 155);
-  --chart-1: oklch(0.45 0.18 155);
-  --chart-2: oklch(0.50 0.14 250);
-  --chart-3: oklch(0.55 0.16 85);
-  --chart-4: oklch(0.45 0.20 310);
-  --chart-5: oklch(0.50 0.12 200);
-  --sidebar: oklch(0.97 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.45 0.18 155);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.94 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.90 0 0);
-  --sidebar-ring: oklch(0.45 0.18 155);
+  /* Cards — slightly lighter paper variant */
+  --card: #FDFCF8;
+  --card-foreground: #151515;
+
+  /* Popover */
+  --popover: #FDFCF8;
+  --popover-foreground: #151515;
+
+  /* Primary — Bauhaus Blue (informational, interactive) */
+  --primary: #3157A5;
+  --primary-foreground: #FDFCF8;
+
+  /* Secondary — Soft Gray */
+  --secondary: #EDEAE2;
+  --secondary-foreground: #151515;
+
+  /* Muted — Paper variant */
+  --muted: #EDEAE2;
+  --muted-foreground: #77756F;
+
+  /* Accent — Hover states */
+  --accent: #EDEAE2;
+  --accent-foreground: #151515;
+
+  /* Destructive — Bauhaus Red */
+  --destructive: #C83D32;
+
+  /* Borders — subtle */
+  --border: #D8D5CC;
+  --input: #D8D5CC;
+
+  /* Ring — Focus state */
+  --ring: #3157A5;
+
+  /* Charts — Bauhaus palette */
+  --chart-1: #3157A5;
+  --chart-2: #2F684A;
+  --chart-3: #E7B83E;
+  --chart-4: #D94A38;
+  --chart-5: #77756F;
+
+  /* Border radius — minimal, structural */
+  --radius: 0.25rem;
+
+  /* Sidebar — Ink-based editorial panel */
+  --sidebar: #151515;
+  --sidebar-foreground: #F4F1E8;
+  --sidebar-primary: #F4F1E8;
+  --sidebar-primary-foreground: #151515;
+  --sidebar-accent: #2A2A2A;
+  --sidebar-accent-foreground: #F4F1E8;
+  --sidebar-border: rgba(244, 241, 232, 0.1);
+  --sidebar-ring: #3157A5;
 }
 
 @layer base {
@@ -153,4 +156,172 @@
   html {
     @apply font-sans;
   }
+}
+
+/* =============================================================================
+   SADAN Bauhaus Utility Classes
+   ============================================================================= */
+
+/* Typography scale — large metrics should dominate */
+.sadan-metric {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.sadan-metric-lg {
+  font-size: 4rem;
+}
+
+.sadan-metric-md {
+  font-size: 2.5rem;
+}
+
+.sadan-metric-sm {
+  font-size: 1.5rem;
+}
+
+/* Section label — uppercase tracking */
+.sadan-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+}
+
+/* Divider lines */
+.sadan-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* Bauhaus accent underline */
+.sadan-accent-line {
+  display: block;
+  width: 2rem;
+  height: 2px;
+  background-color: var(--primary);
+  margin-top: 0.5rem;
+}
+
+/* Numbered nav item */
+.sadan-nav-number {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  opacity: 0.5;
+  min-width: 1.25rem;
+}
+
+/* Status dot */
+.sadan-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.sadan-status-dot--online {
+  background-color: var(--color-sadan-success);
+}
+
+.sadan-status-dot--warning {
+  background-color: var(--color-sadan-warning);
+}
+
+.sadan-status-dot--critical {
+  background-color: var(--color-sadan-critical);
+}
+
+.sadan-status-dot--offline {
+  background-color: var(--color-muted-gray);
+}
+
+/* Smooth counting animation for metrics */
+@keyframes sadan-count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sadan-animate-in {
+  animation: sadan-count-up 0.6s ease-out both;
+}
+
+/* Hover underline expansion for nav */
+.sadan-nav-underline {
+  position: relative;
+}
+.sadan-nav-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--sidebar-foreground);
+  transition: width 0.3s ease;
+}
+.sadan-nav-underline:hover::after,
+.sadan-nav-underline[data-active="true"]::after {
+  width: 100%;
+}
+
+/* Chart draw-in animation */
+@keyframes sadan-draw-line {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* Simulation progress bar */
+@keyframes sadan-progress {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sadan-animate-in,
+  .sadan-nav-underline::after {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* =============================================================================
+   Mapbox overrides — Bauhaus style
+   ============================================================================= */
+.mapboxgl-popup-content {
+  background: var(--card) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  font-family: var(--font-sans) !important;
+  padding: 8px 12px !important;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: var(--card) !important;
+}
+
+/* Scrollbar — minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }

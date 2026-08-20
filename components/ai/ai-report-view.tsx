@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Brain, AlertTriangle, CheckCircle, ShieldAlert, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Loader2, Brain, AlertTriangle } from 'lucide-react';
+import Link from 'next/link';
 
 interface Insight {
   category: string;
@@ -23,6 +21,10 @@ interface Report {
   insights: Insight[];
 }
 
+/**
+ * AI Report View — Digital Bauhaus narrative format.
+ * OBSERVATION → IMPACT → RECOMMENDATION → SIMULATE THIS
+ */
 export function AIReportView({ 
   type = 'FLEET_SAFETY_SUMMARY',
   driverId,
@@ -55,157 +57,169 @@ export function AIReportView({
     }
   };
 
-  const riskColors = {
-    LOW: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-    MEDIUM: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-    HIGH: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
-    CRITICAL: 'bg-red-500/10 text-red-500 border-red-500/20 animate-pulse',
+  const riskColors: Record<string, string> = {
+    LOW: 'var(--color-sadan-success)',
+    MEDIUM: 'var(--color-sadan-warning)',
+    HIGH: 'var(--color-bauhaus-red)',
+    CRITICAL: 'var(--color-sadan-critical)',
   };
 
+  // ==========================================================================
+  // Empty state — before generation
+  // ==========================================================================
+  if (!report && !loading) {
+    return (
+      <div className="py-16 text-center max-w-lg mx-auto">
+        <div className="flex h-12 w-12 items-center justify-center mx-auto mb-6 border border-border" style={{ borderRadius: 'var(--radius)' }}>
+          <Brain className="h-6 w-6 text-foreground" />
+        </div>
+        <p className="sadan-label mb-3">What SADAN Sees</p>
+        <h2 className="text-2xl font-bold tracking-tight uppercase mb-3">
+          Generate Intelligence
+        </h2>
+        <p className="text-sm text-muted-foreground mb-8 max-w-sm mx-auto">
+          {type === 'DRIVER_ASSESSMENT' 
+            ? 'Generate a behavioral analysis and coaching plan for this driver based on recent telemetry.' 
+            : 'Analyze the latest telemetry, alerts, and driver behavior to produce actionable intelligence.'}
+        </p>
+        <Button onClick={generateReport} className="uppercase tracking-wider font-semibold">
+          Generate {type === 'DRIVER_ASSESSMENT' ? 'Assessment' : 'Report'} →
+        </Button>
+
+        {error && (
+          <div className="mt-6 flex items-start gap-2 text-sm text-left border border-border p-4" style={{ borderRadius: 'var(--radius)', color: 'var(--color-sadan-critical)' }}>
+            <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-semibold">Generation Failed</p>
+              <p className="text-xs opacity-80">{error}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // Loading state
+  // ==========================================================================
+  if (loading) {
+    return (
+      <div className="py-16 text-center">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-6 text-muted-foreground" />
+        <p className="sadan-label mb-2">Analyzing</p>
+        <p className="text-sm text-muted-foreground">
+          Processing telemetry, cross-referencing alerts, formulating insights...
+        </p>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // Report view — narrative format
+  // ==========================================================================
   return (
-    <div className="space-y-6">
-      {!report && !loading && (
-        <Card className="border-dashed bg-card/50">
-          <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-6">
-              <Brain className="h-8 w-8 text-primary animate-pulse" />
-            </div>
-            <h2 className="text-2xl font-bold tracking-tight mb-2">Generate AI Intelligence</h2>
-            <p className="text-muted-foreground max-w-md mb-8">
-              {type === 'DRIVER_ASSESSMENT' 
-                ? 'Generate a personalized behavioral analysis and coaching plan for this driver based on their recent telemetry.' 
-                : 'Our advanced Groq-powered AI will analyze the latest telemetry, alerts, and driver behavior to produce a comprehensive safety report.'}
-            </p>
-            <Button size="lg" onClick={generateReport} className="gap-2 font-semibold">
-              <Zap className="h-4 w-4" /> Generate {type === 'DRIVER_ASSESSMENT' ? 'Driver Assessment' : 'Fleet Report'}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+    <div className="max-w-3xl">
+      {/* Risk Level */}
+      <div className="flex items-center gap-3 mb-6">
+        <span
+          className="sadan-status-dot"
+          style={{ backgroundColor: riskColors[report!.riskLevel] }}
+        />
+        <span
+          className="text-xs font-bold uppercase tracking-wider"
+          style={{ color: riskColors[report!.riskLevel] }}
+        >
+          {report!.riskLevel} Risk
+        </span>
+      </div>
 
-      {loading && (
-        <Card className="border-border">
-          <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-            <Loader2 className="h-10 w-10 text-primary animate-spin mb-6" />
-            <h2 className="text-xl font-semibold tracking-tight mb-2">Analyzing Fleet Data...</h2>
-            <p className="text-sm text-muted-foreground max-w-sm">
-              The AI is currently processing millions of data points, cross-referencing recent alerts, and formulating actionable insights.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+      {/* Summary */}
+      <p className="sadan-label mb-2">What SADAN Sees</p>
+      <p className="text-base leading-relaxed text-foreground mb-8 whitespace-pre-wrap">
+        {report!.summary}
+      </p>
 
-      {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-red-500 flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 mt-0.5" />
-          <div>
-            <h3 className="font-semibold">AI Generation Failed</h3>
-            <p className="text-sm opacity-90">{error}</p>
-          </div>
-        </div>
-      )}
+      <hr className="sadan-divider my-8" />
 
-      {report && !loading && (
-        <div className="grid gap-6 md:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          {/* Main Content */}
-          <div className="md:col-span-2 space-y-6">
-            <Card className="border-primary/20 shadow-lg shadow-primary/5">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <Brain className="h-6 w-6 text-primary" /> Executive Summary
-                  </CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/20 px-2 py-1 flex items-center gap-1">
-                      <CheckCircle className="h-3 w-3" /> Saved to Records
-                    </Badge>
-                    <Badge variant="outline" className={cn("text-sm font-bold border px-3 py-1 uppercase tracking-wider", riskColors[report.riskLevel])}>
-                      {report.riskLevel} RISK
-                    </Badge>
-                  </div>
+      {/* Numbered Insights */}
+      <div className="space-y-8">
+        {report!.insights.map((insight, idx) => (
+          <div key={idx}>
+            <div className="flex items-start gap-3">
+              <span className="sadan-nav-number font-mono text-base mt-0.5">
+                {String(idx + 1).padStart(2, '0')}
+              </span>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="sadan-label" style={{ color: 'var(--color-muted-gray)' }}>
+                    {insight.category}
+                  </span>
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-wider"
+                    style={{
+                      color:
+                        insight.priority === 'HIGH' ? 'var(--color-sadan-critical)' :
+                        insight.priority === 'MEDIUM' ? 'var(--color-sadan-warning)' :
+                        'var(--color-sadan-success)',
+                    }}
+                  >
+                    {insight.priority}
+                  </span>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {report.summary}
-                </p>
-              </CardContent>
-            </Card>
-
-            <h3 className="text-xl font-semibold tracking-tight mt-8 mb-4">Categorized Insights</h3>
-            <div className="space-y-4">
-              {report.insights.map((insight, idx) => (
-                <Card key={idx} className="overflow-hidden border-l-4 border-l-primary bg-card/50 hover:bg-card/80 transition-colors">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="text-xs bg-background">{insight.category}</Badge>
-                          <span className={cn("text-xs font-semibold uppercase tracking-wider", 
-                            insight.priority === 'HIGH' ? 'text-red-400' : 
-                            insight.priority === 'MEDIUM' ? 'text-yellow-400' : 'text-emerald-400'
-                          )}>
-                            {insight.priority} PRIORITY
-                          </span>
-                        </div>
-                        <h4 className="font-semibold text-lg">{insight.title}</h4>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-4">{insight.description}</p>
-                    <div className="bg-background/50 rounded-md p-3 border border-border/50 flex items-start gap-3">
-                      <ShieldAlert className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                      <p className="text-sm font-medium">{insight.recommendation}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                <h3 className="text-base font-semibold mb-2">{insight.title}</h3>
+                <p className="text-sm text-muted-foreground mb-3">{insight.description}</p>
+                <div className="border-l-2 pl-3 py-1" style={{ borderColor: 'var(--color-bauhaus-blue)' }}>
+                  <p className="text-sm font-medium">{insight.recommendation}</p>
+                </div>
+              </div>
             </div>
           </div>
+        ))}
+      </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Key Findings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  {report.keyFindings.map((finding, i) => (
-                    <li key={i} className="flex gap-3 text-sm text-muted-foreground">
-                      <AlertTriangle className="h-4 w-4 text-yellow-500 shrink-0 mt-0.5" />
-                      <span>{finding}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+      <hr className="sadan-divider my-8" />
 
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-lg text-primary flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5" /> Action Plan
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  {report.recommendations.map((rec, i) => (
-                    <li key={i} className="flex gap-3 text-sm font-medium">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-primary text-xs shrink-0">
-                        {i + 1}
-                      </span>
-                      <span>{rec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-            
-            <Button variant="outline" className="w-full" onClick={generateReport}>
-              Regenerate Report
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Key Findings */}
+      <div className="mb-8">
+        <p className="sadan-label mb-4">Key Findings</p>
+        <ul className="space-y-2">
+          {report!.keyFindings.map((finding, i) => (
+            <li key={i} className="flex gap-2 text-sm text-muted-foreground">
+              <span className="text-foreground">—</span>
+              <span>{finding}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Recommendations */}
+      <div className="mb-8">
+        <p className="sadan-label mb-4">Action Plan</p>
+        <ul className="space-y-3">
+          {report!.recommendations.map((rec, i) => (
+            <li key={i} className="flex gap-3 text-sm">
+              <span className="font-mono text-xs text-muted-foreground mt-0.5">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="font-medium">{rec}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <hr className="sadan-divider my-8" />
+
+      {/* Actions */}
+      <div className="flex items-center gap-4">
+        <Link href="/simulator">
+          <Button className="uppercase tracking-wider font-semibold">
+            Simulate This →
+          </Button>
+        </Link>
+        <Button variant="outline" onClick={generateReport} className="uppercase tracking-wider">
+          Regenerate
+        </Button>
+      </div>
     </div>
   );
 }

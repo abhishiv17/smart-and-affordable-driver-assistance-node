@@ -5,9 +5,8 @@ import { ToastProvider } from '@/components/dashboard/toast-notification';
 import { PresentationController } from '@/components/demo/presentation-controller';
 
 /**
- * Dashboard layout wrapping all authenticated routes.
- * Provides sidebar navigation, topbar, main content area,
- * global toast notification provider, and realtime alert toasts.
+ * Dashboard layout — Digital Bauhaus application shell.
+ * Paper canvas, editorial sidebar, clean topbar.
  */
 export default function DashboardLayout({
   children,
@@ -16,7 +15,7 @@ export default function DashboardLayout({
 }) {
   return (
     <ToastProvider>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen overflow-hidden bg-background">
         {/* Sidebar */}
         <Sidebar />
 
@@ -26,7 +25,7 @@ export default function DashboardLayout({
           <Topbar />
 
           {/* Page content */}
-          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+          <main className="flex-1 overflow-y-auto px-8 py-6">{children}</main>
         </div>
 
         {/* Global realtime alert toasts */}
