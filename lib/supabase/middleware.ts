@@ -36,12 +36,14 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login');
   const isApiTelemetryRoute = request.nextUrl.pathname.startsWith('/api/telemetry');
   const isSimulatorRoute = request.nextUrl.pathname.startsWith('/simulator');
+  const isHomepage = request.nextUrl.pathname === '/';
   
   if (
     !user &&
     !isAuthRoute &&
     !isApiTelemetryRoute &&
-    !isSimulatorRoute
+    !isSimulatorRoute &&
+    !isHomepage
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();

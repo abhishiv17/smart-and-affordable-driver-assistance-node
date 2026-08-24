@@ -53,9 +53,10 @@ export function useRealtimeAlerts(
 
   useEffect(() => {
     const supabase = createClient();
+    const channelName = `realtime-alerts-${Math.random().toString(36).substring(2, 9)}`;
 
     channelRef.current = supabase
-      .channel('realtime-alerts')
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'alerts' },

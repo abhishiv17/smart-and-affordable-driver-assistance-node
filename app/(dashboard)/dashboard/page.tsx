@@ -1,18 +1,18 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { LiveDashboard } from '@/components/realtime/live-dashboard';
 import type { DbVehicle } from '@/types/database';
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Fleet safety overview and real-time monitoring dashboard.',
+  title: 'Overview',
+  description: 'Business health and fleet operations overview.',
 };
 
 export const dynamic = 'force-dynamic';
 
 /**
- * Dashboard page â€” SSR fetches initial data, LiveDashboard client component
+ * Overview page — SSR fetches initial data, LiveDashboard client component
  * handles realtime subscriptions and live UI updates.
  */
 export default async function DashboardPage() {
@@ -36,8 +36,8 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader
-        title="Fleet Command Center"
-        description="Real-time safety overview for your fleet"
+        title="Overview"
+        description="Business health and fleet operations at a glance"
       />
       <LiveDashboard
         initialVehicles={vehicles}

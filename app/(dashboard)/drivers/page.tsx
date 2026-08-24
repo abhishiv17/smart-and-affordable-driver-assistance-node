@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/layout/page-header';
-import { Section } from '@/components/dashboard/section';
 import { StatusBadge } from '@/components/dashboard/status-badge';
 import { EmptyState } from '@/components/dashboard/empty-state';
-import { StatCard } from '@/components/dashboard/stat-card';
 import { formatRelativeTime } from '@/lib/utils/formatters';
-import { Users, UserCheck, UserX } from 'lucide-react';
+import { Users } from 'lucide-react';
 import Link from 'next/link';
 import { DriverActions } from '@/components/admin/driver-actions';
 import { DriverRowActions } from '@/components/admin/driver-row-actions';
@@ -39,63 +37,75 @@ export default async function DriversPage() {
     <>
       <PageHeader
         title="Drivers"
-        description="Manage and monitor all drivers in your fleet"
+        description={`${allDrivers.length} drivers in your fleet`}
         actions={<DriverActions />}
       />
 
-      <div className="grid gap-3 sm:grid-cols-3 mb-6">
-        <StatCard label="Active" value={activeDrivers} icon={UserCheck} accentColor="text-emerald-400" />
-        <StatCard label="Inactive" value={inactiveDrivers} icon={Users} accentColor="text-zinc-400" />
-        <StatCard label="Suspended" value={suspendedDrivers} icon={UserX} accentColor="text-red-400" />
-      </div>
-
-      <Section title="All Drivers">
-        {allDrivers.length === 0 ? (
-          <EmptyState
-            icon={Users}
-            title="No drivers"
-            description="Drivers will appear here once the database is seeded."
-          />
-        ) : (
-          <div className="overflow-x-auto rounded-lg border border-border">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Name</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Phone</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Joined</th>
-                  <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allDrivers.map((driver) => (
-                  <tr key={driver.id} className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/drivers/${driver.id}`}
-                        className="font-semibold text-foreground hover:text-primary transition-colors"
-                      >
-                        {driver.name}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{driver.phone ?? 'â€”'}</td>
-                    <td className="px-4 py-3">
-                      <StatusBadge variant="driver" status={driver.status} dot={driver.status === 'ACTIVE'} />
-                    </td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground">
-                      {formatRelativeTime(driver.created_at)}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <DriverRowActions driver={driver} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* Stats strip */}
+      <div className="flex items-center gap-8 mb-8">
+        <div className="flex items-center gap-2">
+          <span className="sadan-status-dot sadan-status-dot--online" />
+          <span className="text-sm font-medium">{activeDrivers} Active</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="sadan-status-dot sadan-status-dot--offline" />
+          <span className="text-sm font-medium">{inactiveDrivers} Inactive</span>
+        </div>
+        {suspendedDrivers > 0 && (
+          <div className="flex items-center gap-2">
+            <span className="sadan-status-dot sadan-status-dot--critical" />
+            <span className="text-sm font-medium">{suspendedDrivers} Suspended</span>
           </div>
         )}
-      </Section>
+      </div>
+
+      <hr className="sadan-divider mb-6" />
+
+      {allDrivers.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="No drivers"
+          description="Drivers will appear here once the database is seeded."
+        />
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 pr-4 sadan-label">Name</th>
+                <th className="text-left py-3 pr-4 sadan-label">Phone</th>
+                <th className="text-left py-3 pr-4 sadan-label">Status</th>
+                <th className="text-left py-3 pr-4 sadan-label">Joined</th>
+                <th className="text-right py-3 sadan-label">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allDrivers.map((driver) => (
+                <tr key={driver.id} className="border-b border-border/50 transition-colors hover:bg-muted/30">
+                  <td className="py-3 pr-4">
+                    <Link
+                      href={`/drivers/${driver.id}`}
+                      className="font-semibold text-foreground hover:text-primary transition-colors"
+                    >
+                      {driver.name}
+                    </Link>
+                  </td>
+                  <td className="py-3 pr-4 text-muted-foreground font-mono text-xs">{driver.phone ?? '—'}</td>
+                  <td className="py-3 pr-4">
+                    <StatusBadge variant="driver" status={driver.status} dot={driver.status === 'ACTIVE'} />
+                  </td>
+                  <td className="py-3 pr-4 text-xs text-muted-foreground">
+                    {formatRelativeTime(driver.created_at)}
+                  </td>
+                  <td className="py-3 text-right">
+                    <DriverRowActions driver={driver} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 }
