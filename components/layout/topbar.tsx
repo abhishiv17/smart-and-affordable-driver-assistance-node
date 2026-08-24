@@ -26,7 +26,6 @@ function getPageTitle(pathname: string): string {
 export function Topbar() {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
-  const { setOpen } = useSearchContext();
   return (
     <header className="flex h-12 items-center gap-4 border-b border-border bg-background px-6">
       {/* Breadcrumb */}
