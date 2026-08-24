@@ -2,11 +2,13 @@
 
 import { usePathname } from 'next/navigation';
 import { navigationConfig } from '@/config/navigation';
-import { Bell, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { NotificationsPanel } from '@/components/notifications/NotificationsPanel';
+import { useSearchContext } from '@/components/search/SearchProvider';
 
 /**
  * Resolve the current page title from the pathname using navigation config.
@@ -29,7 +31,7 @@ function getPageTitle(pathname: string): string {
 export function Topbar() {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
-
+  const { setOpen } = useSearchContext();
   return (
     <header className="flex h-14 items-center gap-4 border-b border-border bg-background px-6">
       {/* Breadcrumb / Page context */}
@@ -50,21 +52,13 @@ export function Topbar() {
           size="icon"
           className="h-8 w-8 text-muted-foreground hover:text-foreground"
           aria-label="Search"
+          onClick={() => setOpen(true)}
         >
           <Search className="h-4 w-4" />
         </Button>
 
         {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative h-8 w-8 text-muted-foreground hover:text-foreground"
-          aria-label="Notifications"
-        >
-          <Bell className="h-4 w-4" />
-          {/* Notification indicator dot */}
-          <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-red-500" />
-        </Button>
+<NotificationsPanel />
 
         <Separator orientation="vertical" className="h-6" />
 
