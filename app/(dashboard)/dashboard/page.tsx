@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
   const supabase = await createClient();
 
-  const [vehiclesResult, alertsResult, devicesResult] = await Promise.all([
+  const [vehiclesResult, alertsResult, devicesResult, telemetryResult] = await Promise.all([
     supabase.from('vehicles').select('*'),
     supabase
       .from('alerts')
@@ -26,12 +26,19 @@ export default async function DashboardPage() {
       .order('timestamp', { ascending: false })
       .limit(8),
     supabase.from('devices').select('connectivity_status'),
+    supabase
+      .from('telemetry')
+      .select('timestamp, drowsiness_score')
+      .order('timestamp', { ascending: false })
+      .limit(50),
   ]);
 
   const vehicles: DbVehicle[] = vehiclesResult.data ?? [];
   const recentAlerts = alertsResult.data ?? [];
   const devices = devicesResult.data ?? [];
   const devicesOnline = devices.filter(d => d.connectivity_status === 'ONLINE').length;
+  // Reverse so the chart reads left-to-right, oldest to newest
+  const recentTelemetry = (telemetryResult.data ?? []).reverse();
 
   return (
     <>
@@ -44,6 +51,7 @@ export default async function DashboardPage() {
         initialAlerts={recentAlerts}
         initialDevicesOnline={devicesOnline}
         initialDevicesTotal={devices.length}
+        initialTelemetry={recentTelemetry}
       />
     </>
   );

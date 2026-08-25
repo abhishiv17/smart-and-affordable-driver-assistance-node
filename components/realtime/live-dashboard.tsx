@@ -8,6 +8,7 @@
 //   - Large metric hero (Business Health score)
 //   - KPI strip (Revenue, Cash Flow, Fleet)
 //   - Live Business Signals
+//   - Safety Trend & Alert Breakdown charts
 //   - Vehicle Fleet list
 // =============================================================================
 
@@ -19,34 +20,29 @@ import {
   classifyVehicleRisk,
   sortByRisk,
 } from '@/lib/safety/risk-classification';
+import { SafetyTrendChart } from '@/components/charts/safety-trend-chart';
+import { AlertBreakdownChart } from '@/components/charts/alert-breakdown-chart';
 import Link from 'next/link';
 import type { DbVehicle, DbAlert } from '@/types/database';
-
-// =============================================================================
-// Types
-// =============================================================================
 
 interface LiveDashboardProps {
   initialVehicles: DbVehicle[];
   initialAlerts: (DbAlert & { vehicles?: { vehicle_number: string } | null })[];
   initialDevicesOnline: number;
   initialDevicesTotal: number;
+  initialTelemetry: { timestamp: string; drowsiness_score: number }[];
 }
-
-// =============================================================================
-// Component
-// =============================================================================
 
 export function LiveDashboard({
   initialVehicles,
   initialAlerts,
   initialDevicesOnline,
   initialDevicesTotal,
+  initialTelemetry,
 }: LiveDashboardProps) {
   const { vehicles } = useRealtimeVehicles(initialVehicles);
   const { alerts } = useRealtimeAlerts(initialAlerts);
 
-  // Computed
   const totalVehicles = vehicles.length;
   const activeVehicles = vehicles.filter(v => v.status === 'ACTIVE').length;
   const avgSafetyScore = vehicles.length > 0
@@ -68,7 +64,6 @@ export function LiveDashboard({
       ? 'var(--color-sadan-warning)'
       : 'var(--color-sadan-critical)';
 
-  // Greeting
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
   const dateStr = new Date().toLocaleDateString('en-IN', {
@@ -79,15 +74,11 @@ export function LiveDashboard({
 
   return (
     <div>
-      {/* Greeting */}
       <p className="text-sm text-muted-foreground mb-1">{greeting}.</p>
       <p className="sadan-label">{dateStr}</p>
 
       <hr className="sadan-divider my-6" />
 
-      {/* ================================================================= */}
-      {/* Hero — Business Health Score */}
-      {/* ================================================================= */}
       <div className="text-center py-8">
         <div className="sadan-metric sadan-metric-lg sadan-animate-in" style={{ color: healthColor }}>
           {avgSafetyScore}
@@ -100,9 +91,6 @@ export function LiveDashboard({
 
       <hr className="sadan-divider my-6" />
 
-      {/* ================================================================= */}
-      {/* KPI Strip */}
-      {/* ================================================================= */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-6">
         <div>
           <p className="sadan-label">Active Vehicles</p>
@@ -132,9 +120,6 @@ export function LiveDashboard({
 
       <hr className="sadan-divider my-6" />
 
-      {/* ================================================================= */}
-      {/* Live Business Signals */}
-      {/* ================================================================= */}
       <div className="py-6">
         <p className="sadan-label mb-4">Live Business Signals</p>
         <div className="space-y-2">
@@ -173,9 +158,19 @@ export function LiveDashboard({
 
       <hr className="sadan-divider my-6" />
 
-      {/* ================================================================= */}
-      {/* Vehicle Fleet */}
-      {/* ================================================================= */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
+        <div>
+          <p className="sadan-label mb-4">Fleet Safety Trend</p>
+          <SafetyTrendChart data={initialTelemetry} />
+        </div>
+        <div>
+          <p className="sadan-label mb-4">Alert Breakdown</p>
+          <AlertBreakdownChart alerts={alerts} />
+        </div>
+      </div>
+
+      <hr className="sadan-divider my-6" />
+
       <div className="py-6">
         <div className="flex items-center justify-between mb-4">
           <p className="sadan-label">Vehicle Fleet</p>
