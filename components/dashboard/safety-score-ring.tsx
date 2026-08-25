@@ -12,6 +12,8 @@ interface SafetyScoreRingProps {
   strokeWidth?: number;
   /** Show numeric label inside */
   showLabel?: boolean;
+  /** Show safety band text below the score */
+  showBandLabel?: boolean;
   /** Additional class */
   className?: string;
 }
@@ -20,12 +22,15 @@ interface SafetyScoreRingProps {
  * Circular progress ring displaying a safety score (0–100).
  * Color changes based on safety band: excellent (green), good (cyan),
  * fair (amber), poor (orange), critical (red).
+ *
+ * Supports smooth CSS transition animation on mount and value changes.
  */
 export function SafetyScoreRing({
   score,
   size = 64,
   strokeWidth = 5,
   showLabel = true,
+  showBandLabel = false,
   className,
 }: SafetyScoreRingProps) {
   const radius = (size - strokeWidth) / 2;
@@ -50,8 +55,21 @@ export function SafetyScoreRing({
     Critical: 'text-[oklch(0.63_0.24_25)]',
   };
 
+  const glowColorMap: Record<string, string> = {
+    Excellent: 'oklch(0.75 0.18 155 / 0.3)',
+    Good: 'oklch(0.72 0.12 200 / 0.3)',
+    Fair: 'oklch(0.80 0.16 85 / 0.3)',
+    Poor: 'oklch(0.75 0.18 55 / 0.3)',
+    Critical: 'oklch(0.63 0.24 25 / 0.3)',
+  };
+
   const strokeColor = colorMap[band.label] ?? colorMap.Good;
   const textColor = textColorMap[band.label] ?? textColorMap.Good;
+  const glowColor = glowColorMap[band.label] ?? glowColorMap.Good;
+
+  // Determine font size based on ring size
+  const fontSize = size >= 100 ? 'text-3xl' : size >= 64 ? 'text-lg' : 'text-sm';
+  const bandFontSize = size >= 100 ? 'text-xs' : 'text-[9px]';
 
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
@@ -60,6 +78,9 @@ export function SafetyScoreRing({
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         className="-rotate-90"
+        style={{
+          filter: size >= 80 ? `drop-shadow(0 0 ${size / 8}px ${glowColor})` : undefined,
+        }}
       >
         {/* Background track */}
         <circle
@@ -80,14 +101,19 @@ export function SafetyScoreRing({
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={circumference - progress}
-          className={cn('transition-all duration-700 ease-out', strokeColor)}
+          className={cn('transition-all duration-1000 ease-out', strokeColor)}
         />
       </svg>
       {showLabel && (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={cn('text-lg font-bold leading-none', textColor)}>
+          <span className={cn('font-bold leading-none', fontSize, textColor)}>
             {Math.round(clampedScore)}
           </span>
+          {showBandLabel && (
+            <span className={cn('mt-0.5 font-medium uppercase tracking-wider', bandFontSize, 'text-muted-foreground')}>
+              {band.label}
+            </span>
+          )}
         </div>
       )}
     </div>

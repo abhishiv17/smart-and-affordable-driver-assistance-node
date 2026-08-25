@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -37,51 +36,47 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Sign in</CardTitle>
-        <CardDescription>
-          Enter your email and password to access the command center.
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={handleLogin}>
-        <CardContent className="space-y-4">
-          {error && (
-            <div className="rounded-md border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-500 flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="admin@sadan.fleet" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required 
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input 
-              id="password" 
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required 
-            />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            {loading ? 'Authenticating...' : 'Sign in'}
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+    <form onSubmit={handleLogin} className="space-y-5">
+      {error && (
+        <div
+          className="flex items-start gap-2 text-sm p-3 border"
+          style={{
+            borderColor: 'var(--color-sadan-critical)',
+            color: 'var(--color-sadan-critical)',
+            borderRadius: 'var(--radius)',
+          }}
+        >
+          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+      
+      <div className="space-y-1.5">
+        <Label htmlFor="email" className="sadan-label">Email</Label>
+        <Input 
+          id="email" 
+          type="email" 
+          placeholder="admin@sadan.fleet" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required 
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="password" className="sadan-label">Password</Label>
+        <Input 
+          id="password" 
+          type="password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required 
+        />
+      </div>
+
+      <Button type="submit" className="w-full uppercase tracking-wider font-semibold" disabled={loading}>
+        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+        {loading ? 'Authenticating...' : 'Enter SADAN →'}
+      </Button>
+    </form>
   );
 }

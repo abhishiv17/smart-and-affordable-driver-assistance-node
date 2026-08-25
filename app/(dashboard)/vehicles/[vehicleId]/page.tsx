@@ -126,6 +126,7 @@ export default async function VehicleDetailPage({
     timestamp: alert.timestamp,
     title: alert.message,
     severity: alert.severity as 'INFO' | 'WARNING' | 'CRITICAL',
+    href: `/alerts/${alert.id}`,
   }));
 
   return (

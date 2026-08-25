@@ -1,12 +1,14 @@
-﻿import { Sidebar } from '@/components/layout/sidebar';
+import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
 import { RealtimeAlertToasts } from '@/components/realtime/realtime-alert-toasts';
 import { SearchProvider } from '@/components/search/SearchProvider';
 import { CommandSearch } from '@/components/search/CommandSearch';
+import { ToastProvider } from '@/components/dashboard/toast-notification';
+import { PresentationController } from '@/components/demo/presentation-controller';
+
 /**
- * Dashboard layout wrapping all authenticated routes.
- * Provides sidebar navigation, topbar, main content area,
- * and global realtime alert toast notifications.
+ * Dashboard layout — Digital Bauhaus application shell.
+ * Paper canvas, editorial sidebar, clean topbar.
  */
 export default function DashboardLayout({
   children,
@@ -14,22 +16,31 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-  <SearchProvider>
-    <div className="flex h-screen overflow-hidden">
+    <SearchProvider>
+      <ToastProvider>
+        <div className="flex h-screen overflow-hidden bg-background">
+          {/* Sidebar */}
+          <Sidebar />
 
-      {/* Main content area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Topbar */}
-        <Topbar />
+          {/* Global command search (Ctrl+K) */}
+          <CommandSearch />
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
-      </div>
+          {/* Main content area */}
+          <div className="flex flex-1 flex-col overflow-hidden">
+            {/* Topbar */}
+            <Topbar />
 
-      {/* Global realtime alert toasts */}
-      <RealtimeAlertToasts />
-    </div>
-    <CommandSearch />
-  </SearchProvider>
-);
+            {/* Page content */}
+            <main className="flex-1 overflow-y-auto px-8 py-6">{children}</main>
+          </div>
+
+          {/* Global realtime alert toasts */}
+          <RealtimeAlertToasts />
+
+          {/* Presentation controller */}
+          <PresentationController />
+        </div>
+      </ToastProvider>
+    </SearchProvider>
+  );
 }

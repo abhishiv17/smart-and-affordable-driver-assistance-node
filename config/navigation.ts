@@ -1,5 +1,5 @@
 // =============================================================================
-// Navigation Configuration
+// Navigation Configuration — Digital Bauhaus
 // =============================================================================
 
 import {
@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   Brain,
   Radio,
+  LineChart,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -20,6 +21,8 @@ export interface NavItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  /** Numbered index for editorial navigation (e.g., "01") */
+  number: string;
   /** Optional badge text (e.g., alert count) */
   badge?: string;
   /** Whether this item is disabled */
@@ -36,60 +39,62 @@ export interface NavGroup {
 
 /**
  * Main sidebar navigation structure.
+ * Editorial numbered navigation — Digital Bauhaus style.
  */
 export const navigationConfig: NavGroup[] = [
   {
-    label: 'Overview',
     items: [
       {
-        label: 'Dashboard',
+        number: '01',
+        label: 'Overview',
         href: '/dashboard',
         icon: LayoutDashboard,
       },
       {
+        number: '02',
         label: 'Live Map',
         href: '/map',
         icon: MapPin,
       },
-    ],
-  },
-  {
-    label: 'Fleet',
-    items: [
       {
+        number: '03',
         label: 'Vehicles',
         href: '/vehicles',
         icon: Truck,
       },
       {
+        number: '04',
         label: 'Drivers',
         href: '/drivers',
         icon: Users,
       },
-    ],
-  },
-  {
-    label: 'Safety',
-    items: [
       {
+        number: '05',
         label: 'Alerts',
         href: '/alerts',
         icon: AlertTriangle,
       },
       {
-        label: 'AI Intelligence',
+        number: '06',
+        label: 'Intelligence',
         href: '/ai',
         icon: Brain,
+      },
+      {
+        number: '07',
+        label: 'Simulation',
+        href: '/simulator',
+        icon: Radio,
       },
     ],
   },
   {
-    label: 'Tools',
     items: [
       {
-        label: 'Device Simulator',
-        href: '/simulator',
-        icon: Radio,
+        number: '08',
+        label: 'Why SADAN?',
+        href: '/business-case',
+        icon: LineChart,
       },
     ],
   },

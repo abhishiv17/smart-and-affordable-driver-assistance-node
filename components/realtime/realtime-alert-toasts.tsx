@@ -78,7 +78,7 @@ export function RealtimeAlertToasts() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none">
+    <div className="fixed top-14 right-6 z-50 flex flex-col gap-2 max-w-sm pointer-events-none">
       {toasts.map(({ id, alert }) => {
         const styles = SEVERITY_STYLES[alert.severity] ?? SEVERITY_STYLES.INFO;
         const Icon = SEVERITY_ICONS[alert.severity] ?? SEVERITY_ICONS.INFO;
@@ -86,7 +86,7 @@ export function RealtimeAlertToasts() {
         return (
           <div
             key={id}
-            className={`pointer-events-auto flex items-start gap-3 rounded-lg border px-4 py-3 shadow-2xl backdrop-blur-md animate-in slide-in-from-right-5 duration-300 ${styles}`}
+            className={`pointer-events-auto flex items-start gap-3 rounded-lg border px-4 py-3 shadow-2xl backdrop-blur-md animate-in slide-in-from-top-4 duration-300 ${styles}`}
           >
             <Icon className="mt-0.5 h-4 w-4 shrink-0 text-current opacity-80" />
             <div className="flex-1 min-w-0">

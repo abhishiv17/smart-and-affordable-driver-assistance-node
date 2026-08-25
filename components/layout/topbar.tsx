@@ -2,13 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { navigationConfig } from '@/config/navigation';
-import { Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { NotificationsPanel } from '@/components/notifications/NotificationsPanel';
-import { useSearchContext } from '@/components/search/SearchProvider';
+import { GlobalSearch } from './global-search';
+import { NotificationBell } from './notification-bell';
 
 /**
  * Resolve the current page title from the pathname using navigation config.
@@ -25,57 +20,44 @@ function getPageTitle(pathname: string): string {
 }
 
 /**
- * Top navigation bar for the SADAN dashboard.
- * Shows breadcrumb, search, notifications, and user avatar.
+ * Top navigation bar — Digital Bauhaus.
+ * Clean breadcrumb, search, user initials.
  */
 export function Topbar() {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
-  const { setOpen } = useSearchContext();
+
   return (
-    <header className="flex h-14 items-center gap-4 border-b border-border bg-background px-6">
-      {/* Breadcrumb / Page context */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">SADAN</span>
-        <span className="text-sm text-muted-foreground/50">/</span>
-        <span className="text-sm font-medium text-foreground">{pageTitle}</span>
+    <header className="flex h-12 items-center gap-4 border-b border-border bg-background px-6">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          SADAN
+        </span>
+        <span className="text-xs text-muted-foreground/40">/</span>
+        <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+          {pageTitle}
+        </span>
       </div>
 
       {/* Spacer */}
       <div className="flex-1" />
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {/* Search */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground hover:text-foreground"
-          aria-label="Search"
-          onClick={() => setOpen(true)}
-        >
-          <Search className="h-4 w-4" />
-        </Button>
+        <GlobalSearch />
+
+        {/* Divider */}
+        <div className="h-4 w-px bg-border" />
 
         {/* Notifications */}
-<NotificationsPanel />
+        <NotificationBell />
 
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* System status */}
-        <Badge variant="outline" className="gap-1.5 text-[11px] font-normal">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          Online
-        </Badge>
-
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* User avatar — Phase 2+: will show authenticated user */}
-        <Avatar className="h-7 w-7">
-          <AvatarFallback className="bg-muted text-[11px] font-semibold text-muted-foreground">
-            SA
-          </AvatarFallback>
-        </Avatar>
+        {/* User */}
+        <div className="h-7 w-7 rounded-full bg-foreground flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
+          <span className="text-[10px] font-bold text-background">A</span>
+        </div>
       </div>
     </header>
   );
