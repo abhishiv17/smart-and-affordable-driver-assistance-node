@@ -10,10 +10,14 @@ import type { TranslationKey } from '@/lib/translations';
 export function PageHeader({
   titleKey,
   descriptionKey,
+  title,
+  description,
   actions,
 }: {
-  titleKey: TranslationKey;
+  titleKey?: TranslationKey;
   descriptionKey?: TranslationKey;
+  title?: string;
+  description?: string;
   actions?: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -23,12 +27,12 @@ export function PageHeader({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground uppercase">
-            {t(titleKey)}
+            {titleKey ? t(titleKey) : title}
           </h1>
           <span className="sadan-accent-line" />
-          {descriptionKey && (
+          {(descriptionKey || description) && (
             <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
-              {t(descriptionKey)}
+              {descriptionKey ? t(descriptionKey) : description}
             </p>
           )}
         </div>
