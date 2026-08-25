@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { PageHeader } from '@/components/layout/page-header';
-import { LiveDashboard } from '@/components/realtime/live-dashboard';
+import { OverviewDashboard } from '@/components/dashboard/overview/overview-dashboard';
 import type { DbVehicle } from '@/types/database';
 
 export const metadata: Metadata = {
@@ -12,8 +11,10 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 /**
- * Overview page — SSR fetches initial data, LiveDashboard client component
+ * Overview page — SSR fetches initial data, OverviewDashboard client component
  * handles realtime subscriptions and live UI updates.
+ *
+ * Digital Bauhaus Command Center — high information density with strong hierarchy.
  */
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -24,7 +25,7 @@ export default async function DashboardPage() {
       .from('alerts')
       .select('*, vehicles(vehicle_number)')
       .order('timestamp', { ascending: false })
-      .limit(8),
+      .limit(20),
     supabase.from('devices').select('connectivity_status'),
   ]);
 
@@ -34,17 +35,11 @@ export default async function DashboardPage() {
   const devicesOnline = devices.filter(d => d.connectivity_status === 'ONLINE').length;
 
   return (
-    <>
-      <PageHeader
-        title="Overview"
-        description="Business health and fleet operations at a glance"
-      />
-      <LiveDashboard
-        initialVehicles={vehicles}
-        initialAlerts={recentAlerts}
-        initialDevicesOnline={devicesOnline}
-        initialDevicesTotal={devices.length}
-      />
-    </>
+    <OverviewDashboard
+      initialVehicles={vehicles}
+      initialAlerts={recentAlerts}
+      initialDevicesOnline={devicesOnline}
+      initialDevicesTotal={devices.length}
+    />
   );
 }
