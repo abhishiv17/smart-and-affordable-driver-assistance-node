@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { navigationConfig } from '@/config/navigation';
 import { GlobalSearch } from './global-search';
+import { LanguageSelector } from './language-selector'
 import { NotificationBell } from './notification-bell';
 
 /**
@@ -50,6 +51,12 @@ export function Topbar() {
 
         {/* Divider */}
         <div className="h-4 w-px bg-border" />
+
+        {/* Language*/}
+        <LanguageSelector/>
+
+        {/* Divider */}
+        <div className="h-4 w-px bg-border"/>
 
         {/* Notifications */}
         <NotificationBell />

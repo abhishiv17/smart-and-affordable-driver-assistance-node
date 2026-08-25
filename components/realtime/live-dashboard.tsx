@@ -15,6 +15,7 @@ import { useRealtimeAlerts } from '@/hooks/use-realtime-alerts';
 import { useRealtimeVehicles } from '@/hooks/use-realtime-vehicles';
 import { StatusBadge } from '@/components/dashboard/status-badge';
 import { formatRelativeTime } from '@/lib/utils/formatters';
+import { useTranslation } from '@/components/layout/language-provider';
 import {
   classifyVehicleRisk,
   sortByRisk,
@@ -45,6 +46,7 @@ export function LiveDashboard({
 }: LiveDashboardProps) {
   const { vehicles } = useRealtimeVehicles(initialVehicles);
   const { alerts } = useRealtimeAlerts(initialAlerts);
+  const { t } = useTranslation();
 
   // Computed
   const totalVehicles = vehicles.length;
@@ -61,7 +63,7 @@ export function LiveDashboard({
 
   const sortedVehicles = sortByRisk(vehicles);
 
-  const healthLabel = avgSafetyScore >= 80 ? 'Good' : avgSafetyScore >= 60 ? 'Fair' : 'Critical';
+  const healthLabel = avgSafetyScore >= 80 ? t('healthGood') : avgSafetyScore >= 60 ? t('healthFair') : t('healthCritical');
   const healthColor = avgSafetyScore >= 80
     ? 'var(--color-sadan-success)'
     : avgSafetyScore >= 60
@@ -70,7 +72,7 @@ export function LiveDashboard({
 
   // Greeting
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+  const greeting = hour < 12 ? t('goodMorning') : hour < 17 ? t('goodAfternoon') : t('goodEvening');
   const dateStr = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
@@ -95,7 +97,7 @@ export function LiveDashboard({
         <p className="mt-2 text-sm font-semibold uppercase tracking-wider" style={{ color: healthColor }}>
           {healthLabel}
         </p>
-        <p className="sadan-label mt-1">Business Health</p>
+        <p className="sadan-label mt-1">{t('businessHealth')}</p>
       </div>
 
       <hr className="sadan-divider my-6" />
@@ -105,26 +107,26 @@ export function LiveDashboard({
       {/* ================================================================= */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-6">
         <div>
-          <p className="sadan-label">Active Vehicles</p>
+          <p className="sadan-label">{t('activeVehicles')}</p>
           <p className="sadan-metric sadan-metric-md mt-1">{activeVehicles}</p>
-          <p className="text-xs text-muted-foreground mt-1">{totalVehicles} total</p>
+          <p className="text-xs text-muted-foreground mt-1">{totalVehicles} {t('total')}</p>
         </div>
         <div>
-          <p className="sadan-label">Critical Alerts</p>
+          <p className="sadan-label">{t('criticalAlerts')}</p>
           <p className="sadan-metric sadan-metric-md mt-1" style={{ color: criticalAlerts > 0 ? 'var(--color-sadan-critical)' : 'var(--color-sadan-success)' }}>
             {criticalAlerts}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            {criticalAlerts > 0 ? 'Requires action' : 'All clear'}
+            {criticalAlerts > 0 ? t('requiresAction') : t('allClear')}
           </p>
         </div>
         <div>
-          <p className="sadan-label">Devices Online</p>
+          <p className="sadan-label">{t('devicesOnline')}</p>
           <p className="sadan-metric sadan-metric-md mt-1">{initialDevicesOnline}</p>
-          <p className="text-xs text-muted-foreground mt-1">{initialDevicesTotal} total</p>
+          <p className="text-xs text-muted-foreground mt-1">{initialDevicesTotal} {t('total')}</p>
         </div>
         <div>
-          <p className="sadan-label">Fleet Safety</p>
+          <p className="sadan-label">{t('fleetSafety')}</p>
           <p className="sadan-metric sadan-metric-md mt-1">{avgSafetyScore}</p>
           <p className="text-xs text-muted-foreground mt-1">/ 100</p>
         </div>
@@ -141,32 +143,32 @@ export function LiveDashboard({
           {activeVehicles > 0 && (
             <div className="flex items-center gap-3 text-sm">
               <span className="sadan-status-dot sadan-status-dot--online" />
-              <span>{activeVehicles} vehicles currently active</span>
+              <span>{activeVehicles} {t('vehiclesCurrentlyActive')}</span>
             </div>
           )}
           {criticalAlerts > 0 && (
             <div className="flex items-center gap-3 text-sm">
               <span className="sadan-status-dot sadan-status-dot--critical" />
               <span style={{ color: 'var(--color-sadan-critical)' }}>
-                {criticalAlerts} critical alert{criticalAlerts !== 1 ? 's' : ''} requiring attention
+                {criticalAlerts} {t('criticalAlertsRequiringAttention')}
               </span>
             </div>
           )}
           {warningAlerts > 0 && (
             <div className="flex items-center gap-3 text-sm">
               <span className="sadan-status-dot sadan-status-dot--warning" />
-              <span>{warningAlerts} warning{warningAlerts !== 1 ? 's' : ''} to monitor</span>
+              <span>{warningAlerts} {t('warningsToMonitor')}</span>
             </div>
           )}
           {criticalAlerts === 0 && warningAlerts === 0 && (
             <div className="flex items-center gap-3 text-sm">
               <span className="sadan-status-dot sadan-status-dot--online" />
-              <span>All systems healthy — no active alerts</span>
+              <span>{t('allSystemsHealthy')}</span>
             </div>
           )}
           <div className="flex items-center gap-3 text-sm">
             <span className="sadan-status-dot sadan-status-dot--online" />
-            <span>{initialDevicesOnline}/{initialDevicesTotal} devices connected</span>
+            <span>{initialDevicesOnline}/{initialDevicesTotal} {t('devicesConnected')}</span>
           </div>
         </div>
       </div>
@@ -178,9 +180,9 @@ export function LiveDashboard({
       {/* ================================================================= */}
       <div className="py-6">
         <div className="flex items-center justify-between mb-4">
-          <p className="sadan-label">Vehicle Fleet</p>
+          <p className="sadan-label">{t('vehicleFleet')}</p>
           <Link href="/vehicles" className="text-xs font-medium text-primary hover:underline uppercase tracking-wider">
-            View All →
+            {t('viewAll')}
           </Link>
         </div>
 
@@ -188,10 +190,10 @@ export function LiveDashboard({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 pr-4 sadan-label">Vehicle</th>
-                <th className="text-left py-3 pr-4 sadan-label">Status</th>
-                <th className="text-left py-3 pr-4 sadan-label">Health</th>
-                <th className="text-left py-3 sadan-label">Last Seen</th>
+                <th className="text-left py-3 pr-4 sadan-label">{t('vehicleCol')}</th>
+                <th className="text-left py-3 pr-4 sadan-label">{t('statusCol')}</th>
+                <th className="text-left py-3 pr-4 sadan-label">{t('healthCol')}</th>
+                <th className="text-left py-3 sadan-label">{t('lastSeenCol')}</th>
               </tr>
             </thead>
             <tbody>

@@ -36,8 +36,8 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader
-        title="Overview"
-        description="Business health and fleet operations at a glance"
+        titleKey="overview"
+        descriptionKey="businessHealthTagline"
       />
       <LiveDashboard
         initialVehicles={vehicles}
