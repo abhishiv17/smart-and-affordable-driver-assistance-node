@@ -12,12 +12,13 @@ interface LiveMapProps {
 /**
  * Client-side Live Map wrapper.
  * Subscribes to vehicle position and status updates in real time.
+ * Passes extended vehicle data (safety_score, model) for 3D popup display.
  */
 export function LiveMap({ initialVehicles }: LiveMapProps) {
   const router = useRouter();
   const { vehicles } = useRealtimeVehicles(initialVehicles);
 
-  // Filter vehicles that have a known location
+  // Filter vehicles that have a known location and map to 3D marker data
   const markers: MapVehicleMarker[] = vehicles
     .filter((v) => v.latitude !== null && v.longitude !== null)
     .map((v) => ({
@@ -26,6 +27,8 @@ export function LiveMap({ initialVehicles }: LiveMapProps) {
       latitude: v.latitude!,
       longitude: v.longitude!,
       status: v.status,
+      safetyScore: v.safety_score,
+      model: v.model,
     }));
 
   return (
