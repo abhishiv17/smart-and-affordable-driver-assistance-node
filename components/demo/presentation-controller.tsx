@@ -52,9 +52,10 @@ export function PresentationController() {
       <div className="fixed bottom-4 right-4 z-50">
         <Button 
           onClick={() => setIsExpanded(true)}
-          className="rounded-full shadow-lg h-12 w-12 p-0 bg-indigo-600 hover:bg-indigo-700"
+          className="rounded-sm shadow-lg h-9 px-3 gap-2 bg-foreground text-background hover:bg-foreground/90 text-[10px] font-bold uppercase tracking-[0.1em]"
         >
-          <Presentation className="h-5 w-5" />
+          <Presentation className="h-3.5 w-3.5" />
+          Demo
         </Button>
       </div>
     );
@@ -62,10 +63,10 @@ export function PresentationController() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 w-80">
-      <Card className="border-indigo-500/30 shadow-xl bg-background/95 backdrop-blur-sm">
+      <Card className="border-border shadow-xl bg-card">
         <CardContent className="p-4 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+            <div className="flex items-center gap-2 text-foreground">
               <Sparkles className="h-4 w-4" />
               <span className="font-semibold text-sm">Presentation Mode</span>
             </div>
@@ -91,7 +92,7 @@ export function PresentationController() {
 
           <div className="flex items-center gap-2 pt-2 border-t border-border/50">
             {orchestrator.phase === 'idle' || orchestrator.phase === 'complete' || orchestrator.phase === 'error' ? (
-              <Button onClick={handleStart} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+              <Button onClick={handleStart} className="w-full bg-foreground hover:bg-foreground/90 text-background">
                 <Play className="h-4 w-4 mr-2" fill="currentColor" />
                 Start Cinematic Demo
               </Button>
