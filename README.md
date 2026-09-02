@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://img.shields.io/badge/MSME_Hackathon-6.0-emerald?style=for-the-badge" alt="MSME Hackathon 6.0" />
-  <h1>SADAN</h1>
+  <h1>SADAN - MSME</h1>
   <h3>Smart and Affordable Driver Assistance Node</h3>
   <p>A next-generation, affordable fleet safety intelligence platform built to monitor driver behavior, prevent accidents, and deliver real-time AI insights for small and medium logistics fleets in India.</p>
 </div>
